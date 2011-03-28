@@ -3,8 +3,16 @@
 
 #include <iostream>
 #include <cstdio>
+#define greater(A,B,C) if(A == C || B == C) return C
 
 BlockType maxValue(BlockType A,BlockType B) {
+	greater(A,B,BLOCK_LAPIS_ORE);
+	if(B == BLOCK_AIR && A != BLOCK_AIR) {
+			if(A == BLOCK_WATER || A == BLOCK_STATIONARY_WATER)
+				return BLOCK_WATER;
+			return BLOCK_DIRT;
+	}
+
 	return BLOCK_AIR;
 }
 
@@ -41,6 +49,12 @@ int main(void) {
 					}	
 			}
 
+	for(uint64_t i = 0;i<dimX;i++) {
+		for(uint64_t j = 0;j<dimZ;j++) {
+			std::cout << dataArray[i*dimZ + j] << ";";	
+		}
+		std::cout << std::endl;
+	}
 	//do make map here
 
 
