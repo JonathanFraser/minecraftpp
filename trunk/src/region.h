@@ -37,8 +37,8 @@ class RegionInterface : public Counter {
 		RegionInterface(RegionData* pointer);
 	public:
 		RegionInterface(const RegionInterface&);
-		ChunkInterface getChunk(uint8_t xPos,uint8_t zPos);
-		bool chunkInFile(uint8_t xPos,uint8_t zPos);
+		ChunkInterface getChunk(uint8_t xPos,uint8_t zPos) const;
+		bool chunkInFile(uint8_t xPos,uint8_t zPos) const ;
 		bool chunkLoaded(uint8_t xPos,uint8_t zPos);
 };
 #endif

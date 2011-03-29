@@ -35,14 +35,13 @@ void RegionData::readRegionData() {
 	regionFile->read(reinterpret_cast<char*>(timebuf),1024*sizeof(uint32_t));
 	length -= 2* 1024*sizeof(uint32_t);
 
-
-	for(int i=0;i<REGIONX;i++) {
-		for(int j=0;j<REGIONZ;j++) {
+	for(int j=0;j<REGIONZ;j++) {
+		for(int i=0;i<REGIONX;i++) {
 			timeStamps[i][j] = arrayToInt(timebuf2);
 			uint32_t temp = arrayToInt(locbuf2);
-			counts[i][j] = (temp)&0x000000FF;
-			offsets[i][j] = (temp)>>8;
-			chunkTable[i][j]=NULL;
+			counts[j][i] = (temp)&0x000000FF;
+			offsets[j][i] = (temp)>>8;
+			chunkTable[j][i]=NULL;
 		}
 	}
 	delete[] locbuf;
@@ -53,26 +52,26 @@ ChunkInterface RegionData::getChunk(uint8_t xPos,uint8_t zPos) {
 	assert(xPos<REGIONX);
 	assert(zPos<REGIONZ);
 	if( !chunkInFile(xPos,zPos) ) {
-		chunkTable[xPos][zPos] = new ChunkData();
-		timeStamps[xPos][zPos] = time(NULL);
+		chunkTable[zPos][xPos] = new ChunkData();
+		timeStamps[zPos][xPos] = time(NULL);
 	}
 
 	if(!chunkLoaded(xPos,zPos)) {
-		regionFile->seekg(offsets[xPos][zPos]*SECTOR_SIZE,std::ios::beg);
-		chunkTable[xPos][zPos] = new ChunkData();
-		uint8_t* data = chunkTable[xPos][zPos]->getDataPointer(counts[xPos][zPos]);
-		regionFile->read(reinterpret_cast<char *>(data),SECTOR_SIZE*counts[xPos][zPos]);
+		regionFile->seekg(offsets[zPos][xPos]*SECTOR_SIZE,std::ios::beg);
+		chunkTable[zPos][xPos] = new ChunkData();
+		uint8_t* data = chunkTable[zPos][xPos]->getDataPointer(counts[zPos][xPos]);
+		regionFile->read(reinterpret_cast<char *>(data),SECTOR_SIZE*counts[zPos][xPos]);
 	}
 
-	return ChunkInterface(chunkTable[xPos][zPos]);
+	return ChunkInterface(chunkTable[zPos][xPos]);
 }
 
 bool RegionData::chunkInFile(uint8_t xPos,uint8_t zPos) {
-	return (offsets[xPos][zPos] || counts[xPos][zPos] || timeStamps[xPos][zPos]);
+	return (offsets[zPos][xPos] || counts[zPos][xPos] || timeStamps[zPos][xPos]);
 }
 
 bool RegionData::chunkLoaded(uint8_t xPos,uint8_t zPos) {
-	return chunkTable[xPos][zPos] != NULL;
+	return chunkTable[zPos][xPos] != NULL;
 }
 
 
@@ -80,16 +79,16 @@ RegionData::~RegionData() {
 	delete regionFile;
 	for(unsigned int i = 0;i<REGIONX;i++)
 		for(unsigned int j = 0;j<REGIONZ;j++)
-			delete chunkTable[i][j];
+			delete chunkTable[j][i];
 
 }
 
 void RegionData::freeze() {
 	for(unsigned int i = 0;i<REGIONX;i++)
 		for(unsigned int j = 0;j<REGIONZ;j++)
-			if(chunkTable[i][j] != NULL && !(chunkTable[i][j]->isModified())) {
-				delete chunkTable[i][j];
-				chunkTable[i][j] = NULL;
+			if(chunkTable[j][i] != NULL && !(chunkTable[j][i]->isModified())) {
+				delete chunkTable[j][i];
+				chunkTable[j][i] = NULL;
 			}
 }
 
@@ -99,11 +98,11 @@ RegionInterface::RegionInterface(RegionData* pointer) : Counter(pointer) , point
 RegionInterface::RegionInterface(const RegionInterface &B) : Counter(B.data) , pointer(B.pointer){
 }
 
-ChunkInterface RegionInterface::getChunk(uint8_t xPos,uint8_t zPos) {
+ChunkInterface RegionInterface::getChunk(uint8_t xPos,uint8_t zPos) const {
 	return pointer->getChunk(xPos,zPos);
 }
 
-bool RegionInterface::chunkInFile(uint8_t xPos,uint8_t zPos) {
+bool RegionInterface::chunkInFile(uint8_t xPos,uint8_t zPos) const {
 	return pointer->chunkInFile(xPos,zPos);
 }
 
