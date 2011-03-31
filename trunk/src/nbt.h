@@ -24,14 +24,13 @@ enum TAG_Type {
 };
 
 /**
-* @class tag
+* @class Tag
 *	@brief super class for all tags
 * 
 *	the super class for all tags in an NBT file
 * contains some printing functionality via virtual methods
 * and because it is common to all tags the tag type member
 *
-* $Header $
 */
 class Tag {
 	protected:
@@ -42,20 +41,44 @@ class Tag {
 		Tag& operator=(const Tag&);
 
 	public:
+	/**
+	*
+	*	Get tag type
+	*
+	*	@return the type of tag
+	*	
+	*/
 	TAG_Type getTagType();
-	virtual unsigned int write(uint8_t *&) = 0;
-	virtual void print(std::ostream &, unsigned int = 0) = 0;
+
+	/**
+	*
+	* a virtual method to allow subclasses to write their data out in 
+	* nbt format
+	*
+	* @param datapointer an index into an array to dump the tags data, will
+	*	increment the datapointer to the element after this tags data
+	*
+	*/
+	virtual unsigned int write(uint8_t *&datapointer) = 0;
+
+	/**
+	* dumps the tags data in a semi readable format
+	*
+	* @param output a stream reference where to dump the data
+	*
+	* @param depth used internally to tab in recursive levels
+	**/
+	virtual void print(std::ostream &output, unsigned int depth = 0) = 0;
 	virtual ~Tag() {}
 };
 
 /**
-*	@class tagByte
+*	@class TagByte
 *	@brief class for the TAG_Byte data type
 *
 * Stores only a single byte but here to keep a uniform interface
 * with the tag system
 *
-* $Header $
 */
 class TagByte : public Tag {
 		TagByte(uint8_t *&data);
