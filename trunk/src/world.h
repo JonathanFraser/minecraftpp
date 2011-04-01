@@ -27,6 +27,7 @@ class World {
 		std::string dirName;
 		std::string constructFilename(int32_t x,int32_t z);
 		void buildCoordList(const Coord&,CoordVector &,const std::string&);
+		nbtFile* readCompressedNBT(const std::string &filename);
 	public:
 		World(const std::string& );
 		~World();
