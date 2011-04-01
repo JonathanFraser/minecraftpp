@@ -27,13 +27,8 @@ void RegionData::readRegionData() {
 	uint8_t *locbuf2 = locbuf;
 	uint8_t *timebuf2 = timebuf;
 
-	regionFile->seekg(0,std::ios::end);
-	uint64_t length = regionFile->tellg();
-	regionFile->seekg(0,std::ios::beg);
-
 	regionFile->read(reinterpret_cast<char*>(locbuf),SECTOR_SIZE);
 	regionFile->read(reinterpret_cast<char*>(timebuf),SECTOR_SIZE);
-	length -= 2* 1024*sizeof(uint32_t);
 
 	for(int j=0;j<REGIONZ;j++) {
 		for(int i=0;i<REGIONX;i++) {
