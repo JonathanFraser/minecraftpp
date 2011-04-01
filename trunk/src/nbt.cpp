@@ -49,7 +49,8 @@ TagByte::TagByte(uint8_t *&data) : Tag(TAG_Byte) {
 	this->data = *data++;
 }
 
-unsigned int TagByte::write(uint8_t *&data) {
+size_t TagByte::write(uint8_t *&data,size_t size) {
+	assert(size >= 1);
 	*data++ = this->data;
 	return 1;
 }
@@ -63,7 +64,8 @@ TagShort::TagShort(uint8_t *&data) :Tag(TAG_Short) {
 	this->data = arrayToShort(data);
 }
 
-unsigned int TagShort::write(uint8_t *&data) {
+size_t TagShort::write(uint8_t *&data,size_t size) {
+	assert(size >= 2);
 	shortToArray(data,this->data);
 	return 2;	
 }
@@ -77,7 +79,8 @@ TagInt::TagInt(uint8_t *&data) : Tag(TAG_Int) {
 	this->data = arrayToInt(data);
 }
 
-unsigned int TagInt::write(uint8_t *&data) {
+size_t TagInt::write(uint8_t *&data,size_t size) {
+	assert(size >= 4);
 	intToArray(data,this->data);
 	return 4;
 }
@@ -91,7 +94,8 @@ TagLong::TagLong(uint8_t *&data) : Tag(TAG_Long) {
 	this->data = arrayToLong(data);
 }
 
-unsigned int TagLong::write(uint8_t *&data) {
+size_t TagLong::write(uint8_t *&data,size_t size) {
+	assert(size >= 8);
 	longToArray(data,this->data);
 	return 8;
 }
@@ -105,7 +109,8 @@ TagFloat::TagFloat(uint8_t *&data) : Tag(TAG_Float) {
 	this->data = arrayToFloat(data);
 }
 
-unsigned int TagFloat::write(uint8_t *&data) {
+size_t TagFloat::write(uint8_t *&data, size_t size) {
+	assert(size >= 4);
 	floatToArray(data,this->data);
 	return 4;
 }
@@ -119,7 +124,8 @@ TagDouble::TagDouble(uint8_t *&data) : Tag(TAG_Double) {
 	this->data = arrayToDouble(data); 
 }
 
-unsigned int TagDouble::write(uint8_t *&data) {
+size_t TagDouble::write(uint8_t *&data,size_t size) {
+	assert(size >= 8);
 	doubleToArray(data,this->data);
 	return 8;	
 }
@@ -139,12 +145,13 @@ TagByteArray::TagByteArray(uint8_t *&data) :Tag(TAG_ByteArray) {
 		this->data[i] = *data++; 
 }
 
-unsigned int TagByteArray::write(uint8_t *&data) {
+size_t TagByteArray::write(uint8_t *&data,size_t size) {
+	assert(size >= this->size + 4);
 	intToArray(data,size);
 	for(uint32_t i=0;i<size;i++) {
 		*data++ = this->data[i];
 	}
-	return size+4;
+	return this->size+4;
 }
 
 
@@ -161,7 +168,8 @@ TagString::TagString(uint8_t *&data) : Tag(TAG_String) {
 	this->data = arrayToString(data);
 }
 
-unsigned int TagString::write(uint8_t *&data) {
+size_t TagString::write(uint8_t *&data,size_t size) {
+	assert(size >= 2+this->data.size());
 	return stringToArray(data,this->data);
 }
 
@@ -182,13 +190,14 @@ TagList::TagList(uint8_t *&data) : Tag(TAG_List) {
 
 }
 
-unsigned int TagList::write(uint8_t *&data) {
-	unsigned int count = 1;
+size_t TagList::write(uint8_t *&data,size_t size) {
+	size_t count = 1;
+	assert(size >= 5);
 	*data++ = listType;
 	intToArray(data,tags.size());
 	count += 4;
 	for(uint32_t i = 0;i<tags.size();i++) {
-		count += tags[i]->write(data);
+		count += tags[i]->write(data,size-count);
 	}
 	return count;
 }
@@ -228,14 +237,17 @@ TagCompound::TagCompound(uint8_t *&data) : Tag(TAG_Compound) {
 	} while(true);
 }
 
-unsigned int TagCompound::write(uint8_t *&data) {
-	unsigned int count = 0;
+size_t TagCompound::write(uint8_t *&data,size_t size) {
+	size_t count = 0;
 	for(tag_map::iterator i = tags.begin();i != tags.end(); i++ ) {
+		assert(size-count >= 1);
 		*data++ = i->second->getTagType();
 		count++;
+		assert(size-count >= (i->first.size()+2));
 		count += stringToArray(data,i->first);
-		count += i->second->write(data);	
+		count += i->second->write(data,size-count);	
 	}
+	assert(size-count >=1);
 	*data++ = TAG_End;
 	count++;
 	return count;
@@ -280,12 +292,14 @@ nbtFile::nbtFile(uint8_t *data) {
 	root = new TagCompound(data);
 }
 
-unsigned int nbtFile::write(uint8_t *data) {
-	unsigned int count =0;
+size_t nbtFile::write(uint8_t *data,size_t size) {
+	size_t count =0;
+	assert(size >= 1);
 	*data++ = TAG_Compound;
 	count++;
+	assert(size-count >= rootName.size()+2);
 	count += stringToArray(data,rootName);
-	count += root->write(data);
+	count += root->write(data,size-count);
 	return count;
 }
 

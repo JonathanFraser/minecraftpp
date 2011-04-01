@@ -13,7 +13,7 @@ int main(void) {
 	uint8_t data[length];
 	uint8_t data2[length];
 	input.read(reinterpret_cast<char *>(data),length);
-	int64_t count = nbtFile(data).write(data2);
+	int64_t count = nbtFile(data).write(data2,sizeof(data2));
 	nbtFile(data2).print(std::cout);
 	
 	std::cout << length - count << std::endl;

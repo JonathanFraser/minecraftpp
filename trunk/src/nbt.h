@@ -58,8 +58,9 @@ class Tag {
 	* @param datapointer an index into an array to dump the tags data, will
 	*	increment the datapointer to the element after this tags data
 	*
+	* @param size the freespace available
 	*/
-	virtual unsigned int write(uint8_t *&datapointer) = 0;
+	virtual size_t write(uint8_t *&datapointer, size_t size) = 0;
 
 	/**
 	* dumps the tags data in a semi readable format
@@ -87,7 +88,7 @@ class TagByte : public Tag {
 		TagByte& operator=(const TagByte&);
 	public:
 	TagByte() : Tag(TAG_Byte) {};
-	unsigned int write(uint8_t *&);
+	size_t write(uint8_t *&,size_t);
 	void print(std::ostream &output, unsigned int level = 0);
 	int8_t data;
 };
@@ -99,7 +100,7 @@ class TagShort : public Tag {
 		TagShort& operator=(const TagShort&);
 	public:
 		TagShort() : Tag(TAG_Short) {};
-		unsigned int write(uint8_t *&);
+		size_t write(uint8_t *&,size_t);
 		void print(std::ostream &output, unsigned int level = 0);
 		int16_t data;	
 };
@@ -111,7 +112,7 @@ class TagInt : public Tag {
 		TagInt& operator=(const TagInt&);
 	public:
 		TagInt() : Tag(TAG_Int) {};
-		unsigned int write(uint8_t *&);
+		size_t write(uint8_t *&,size_t);
 		void print(std::ostream &output, unsigned int level = 0);
 		int32_t data;
 };
@@ -123,7 +124,7 @@ class TagLong : public Tag {
 		TagLong& operator=(const TagLong&);
 	public:
 		TagLong() : Tag(TAG_Long) {};
-		unsigned int write(uint8_t *&);
+		size_t write(uint8_t *&,size_t);
 		void print(std::ostream &output, unsigned int level = 0);
 		int64_t data;
 };
@@ -135,7 +136,7 @@ class TagFloat : public Tag {
 		TagFloat& operator=(const TagFloat&);
 	public:
 		TagFloat() : Tag(TAG_Float) {};
-		unsigned int write(uint8_t *&);
+		size_t write(uint8_t *&,size_t);
 		void print(std::ostream &output, unsigned int level = 0);
 		float data;
 };
@@ -146,7 +147,7 @@ class TagDouble : public Tag {
 		TagDouble& operator=(const TagDouble&);	
 	public:
 		TagDouble() : Tag(TAG_Double) {};
-		unsigned int write(uint8_t *&);
+		size_t write(uint8_t *&,size_t);
 		void print(std::ostream &output, unsigned int level = 0);
 		double data;
 		TagDouble(uint8_t *&data);
@@ -161,7 +162,7 @@ class TagByteArray : public Tag {
 		uint32_t size;
 		int8_t *data;	
 		TagByteArray(uint32_t size);
-		unsigned int write(uint8_t *&);
+		size_t write(uint8_t *&,size_t);
 		~TagByteArray();
 		void print(std::ostream &output, unsigned int level = 0);
 };
@@ -173,7 +174,7 @@ class TagString : public Tag {
 		TagString& operator=(const TagString&);
 	public:
 		TagString() : Tag(TAG_String) {};
-		unsigned int write(uint8_t *&);
+		size_t write(uint8_t *&,size_t);
 		void print(std::ostream &output, unsigned int level = 0);
 		std::string data;	
 };
@@ -187,7 +188,7 @@ class TagList : public Tag {
 		TagList& operator=(const TagList&);
 	public:
 		TagList() : Tag(TAG_List) {};
-		unsigned int write(uint8_t *&);
+		size_t write(uint8_t *&,size_t);
 		Tag* operator[](unsigned int index);
 		void print(std::ostream &output, unsigned int level = 0);
 		~TagList();
@@ -202,7 +203,7 @@ class TagCompound : public Tag {
 		TagCompound& operator=(const TagCompound&);
 	public:
 		TagCompound();
-		unsigned int write(uint8_t *&);
+		size_t write(uint8_t *&,size_t);
 		void insertSubTag(const std::string&, Tag*);
 		Tag* getSubTag(const std::string&);
 		void print(std::ostream &output, unsigned int level = 0);
@@ -218,7 +219,7 @@ class nbtFile {
 	public:
 		nbtFile();
 		nbtFile(uint8_t *data);
-		unsigned int write(uint8_t *data);
+		size_t write(uint8_t *data,size_t);
 		TagCompound* getRootNode() { return root; }
 		void print(std::ostream &output, unsigned int level = 0);
 		~nbtFile();

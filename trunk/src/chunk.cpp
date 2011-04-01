@@ -94,7 +94,7 @@ void ChunkData::freeze() {
 	if(gzipData == NULL) {
 		gzipData = new uint8_t[MEGABYTE];
 		uint8_t* rawData = new uint8_t[MEGABYTE];
-		long unsigned int datasize = chunkFile->write(rawData);
+		long unsigned int datasize = chunkFile->write(rawData,sizeof(rawData));
 		delete chunkFile;
 		chunkFile = NULL;
 		long unsigned int destsize = MEGABYTE-5;

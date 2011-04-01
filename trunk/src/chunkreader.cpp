@@ -17,7 +17,7 @@ BlockType maxValue(BlockType curr,BlockType prev) {
 }
 
 int main(void) {
-	World B("/home/jfraser/world");
+	World B("/home/binaryblade/world");
 	Coord tL = B.getTopLeft();
 	Coord bR = B.getBottomRight();
 	BlockType* dataArray = new BlockType[16*16*32*32];
@@ -45,7 +45,7 @@ int main(void) {
 
 	for(uint64_t i = 0;i<16*32;i++) {
 		for(uint64_t j = 0;j<16*32;j++) {
-			std::cout << dataArray[i*16*32 + j] << ";";	
+			std::cout << dataArray[i*16*32 + j] << ",";	
 		}
 		std::cout << std::endl;
 	}
