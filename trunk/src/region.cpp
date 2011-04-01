@@ -80,11 +80,14 @@ RegionData::~RegionData() {
 
 void RegionData::freeze() {
 	for(unsigned int i = 0;i<REGIONX;i++)
-		for(unsigned int j = 0;j<REGIONZ;j++)
-			if(chunkTable[j][i] != NULL && !(chunkTable[j][i]->isModified())) {
+		for(unsigned int j = 0;j<REGIONZ;j++) {
+			if(chunkTable[j][i] != NULL && chunkTable[j][i]->isModified()) {
+#warning commit these chunks to a temp table
+			} else {
 				delete chunkTable[j][i];
 				chunkTable[j][i] = NULL;
 			}
+		}
 }
 
 RegionInterface::RegionInterface(RegionData* pointer) : Counter(pointer) , pointer(pointer){
