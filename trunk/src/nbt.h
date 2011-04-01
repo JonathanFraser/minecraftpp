@@ -211,17 +211,56 @@ class TagCompound : public Tag {
 };
 
 
+
 class nbtFile {
 		TagCompound* root;
 		std::string rootName;
 		nbtFile(const nbtFile&);
 		nbtFile& operator=(const nbtFile&);
 	public:
+		/*
+		* Constructor for the nbtFile which initializes with and empty TagCompound
+		*/
 		nbtFile();
+
+		/**
+		* Constructor for an nbt file class which takes in previously read data
+		*
+		* @param data pointer to a data array containing a decompressed nbtFile
+		*
+		*/
 		nbtFile(uint8_t *data);
-		size_t write(uint8_t *data,size_t);
+
+		/**
+		* writes the NBT data tree into the provided array
+		* 
+		*	@param data pointer to empty array for the tree
+		*
+		* @param size size available in the array (used to throw an assert)
+		* 
+		* @return The number of bytes written to the array
+		*/
+		size_t write(uint8_t *data,size_t size);
+		
+		/**
+		*	returns a pointer to the root TagCompound
+		*
+		* @return the TagCompound at the root fo the tree
+		*/
 		TagCompound* getRootNode() { return root; }
+
+		/**
+		* dumps the contents in a semi sane format mostly useful for debugging
+		*
+		* @param output an output stream to dump the info
+		*
+		* @param data the indent depth to print to
+		*/
 		void print(std::ostream &output, unsigned int level = 0);
+
+		/**
+		* Destructor nuff said
+		*/
 		~nbtFile();
 };
 
