@@ -1,12 +1,13 @@
+#ifndef __WORLD_H
+#define __WORLD_H
+#include "region.h"
+#include "nbt.h"
+
 #include <string>
 #include <stdint.h>
 #include <utility>
 #include <vector>
 #include <map>
-#include "region.h"
-
-#ifndef __WORLD_H
-#define __WORLD_H
 
 typedef std::pair<int32_t,int32_t> Coord; 
 typedef std::vector<Coord> CoordVector;
@@ -22,6 +23,7 @@ class World {
 		Coord topLeft;
 		Coord bottomRight;
 		RegionMap regions;
+		nbtFile* levelFile;
 		std::string dirName;
 		std::string constructFilename(int32_t x,int32_t z);
 		void buildCoordList(const Coord&,CoordVector &,const std::string&);

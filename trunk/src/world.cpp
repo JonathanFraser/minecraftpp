@@ -1,8 +1,11 @@
 #include "world.h"
+#include <zlib.h>
+
 #include <fstream>
 #include <sstream>
 #include <iostream>
 #include <cassert>
+
 const std::string World::REGION_DIR = "/region/";
 const std::string World::FILE_PREFIX = "r.";
 const std::string World::FILE_SUFFIX = ".mcr";
@@ -12,9 +15,18 @@ const std::string World::SEPARATOR = ".";
 World::World(const std::string &worldfolder): topLeft(Coord(0,0)),bottomRight(Coord(0,0)),dirName(worldfolder) {
 	CoordVector temp;
 	buildCoordList(Coord(0,0),temp,worldfolder);
+	std::ifstream levelfile((worldfolder+"/level.dat").c_str());
+	gzFile gzfile = gzopen((worldfolder+"/level.dat").c_str(),"rb");
+	size_t datalength = MEGABYTE;
+	uint8_t *data = new uint8_t[datalength];
+	size_t readval = gzread(gzfile,data,datalength);
+	assert(readval != 0);
+	levelFile = new nbtFile(data);
+	delete[] data;
 }
 
 World::~World() {
+	delete levelFile;
 	for(RegionMap::iterator i=regions.begin();i!=regions.end();i++) {
 		delete i->second;
 	}
