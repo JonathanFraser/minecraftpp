@@ -309,6 +309,10 @@ void nbtFile::print(std::ostream &output, unsigned int level) {
 	output << std::endl;
 }
 
+std::string nbtFile::getRootName() {
+	return rootName;
+}
+
 nbtFile::~nbtFile() {
 	delete root;
 }

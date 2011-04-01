@@ -257,6 +257,14 @@ class nbtFile {
 		* @param data the indent depth to print to
 		*/
 		void print(std::ostream &output, unsigned int level = 0);
+	
+		/**
+		*
+		*	return the root name
+		*
+		* @return name of the root TagCompound
+		*/
+		std::string getRootName();
 
 		/**
 		* Destructor nuff said
