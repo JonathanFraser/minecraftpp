@@ -31,8 +31,6 @@ ChunkData::~ChunkData() {
 }
 
 uint8_t* ChunkData::getDataPointer(uint32_t sectorCount) {
-	//if we need a different amount of memory for the data
-	//recreate the region and flag as undecompressed
 	assert(gzipData == NULL);
 	this->sectorCount = sectorCount;
 	gzipData = static_cast<uint8_t*>(malloc(sectorCount*SECTOR_SIZE));
