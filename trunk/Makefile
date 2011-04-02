@@ -8,7 +8,7 @@ TARGET_OBJ := $(addprefix build/,$(addsuffix .o,$(TARGETS)))
 OBJECTS := $(filter-out $(TARGET_OBJ),$(OBJECTS))
 
 override CXXFLAGS := -Wall -Wextra --std=gnu++0x -g -O3 $(shell pkg-config --cflags $(PACKAGES)) $(CXXFLAGS) 
-override LDFLAGS :=  --std=gnu++0x $(LDFLAGS) 
+override LDFLAGS :=  --std=gnu++0x -g $(LDFLAGS) 
 override LIBS := $(shell pkg-config --libs $(PACKAGES)) $(LIBS)
 
 .PHONY: all
