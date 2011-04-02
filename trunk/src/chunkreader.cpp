@@ -45,9 +45,9 @@ int main(void) {
 
 	for(uint64_t i = 0;i<16*32;i++) {
 		for(uint64_t j = 0;j<16*32;j++) {
-			std::cout << dataArray[i*16*32 + j] << ",";	
+			//std::cout << dataArray[i*16*32 + j] << ",";	
 		}
-		std::cout << std::endl;
+		//std::cout << std::endl;
 	}
 	//do make map here
 

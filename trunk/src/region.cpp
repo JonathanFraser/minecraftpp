@@ -7,11 +7,10 @@
 #include "util.h"
 #include "region.h"
 
-RegionData::RegionData(std::string filename) {
+RegionData::RegionData(std::string filename) : regionFile(filename.c_str()) {
 	//parse filename to get X and Y
 	unsigned int start = filename.find("r.");
 	unsigned int stop = filename.find(".mcr");
-	regionFile = new std::ifstream(filename.c_str(),std::ios_base::in);
 	std::string nums =filename.substr(start+2,stop-start-2);
 	unsigned int dotpos = nums.find(".");
 	std::string Xstr = nums.substr(0,dotpos);
@@ -27,8 +26,8 @@ void RegionData::readRegionData() {
 	uint8_t *locbuf2 = locbuf;
 	uint8_t *timebuf2 = timebuf;
 
-	regionFile->read(reinterpret_cast<char*>(locbuf),SECTOR_SIZE);
-	regionFile->read(reinterpret_cast<char*>(timebuf),SECTOR_SIZE);
+	regionFile.read(reinterpret_cast<char*>(locbuf),SECTOR_SIZE);
+	regionFile.read(reinterpret_cast<char*>(timebuf),SECTOR_SIZE);
 
 	for(int j=0;j<REGIONZ;j++) {
 		for(int i=0;i<REGIONX;i++) {
@@ -43,6 +42,9 @@ void RegionData::readRegionData() {
 	delete[] timebuf;	
 }
 
+
+
+
 ChunkInterface RegionData::getChunk(uint8_t xPos,uint8_t zPos) {
 	assert(xPos<REGIONX);
 	assert(zPos<REGIONZ);
@@ -52,10 +54,10 @@ ChunkInterface RegionData::getChunk(uint8_t xPos,uint8_t zPos) {
 	}
 
 	if(!chunkLoaded(xPos,zPos)) {
-		regionFile->seekg(offsets[zPos][xPos]*SECTOR_SIZE,std::ios::beg);
+		regionFile.seekg(offsets[zPos][xPos]*SECTOR_SIZE,std::ios::beg);
 		chunkTable[zPos][xPos] = new ChunkData();
 		uint8_t* data = chunkTable[zPos][xPos]->getDataPointer(counts[zPos][xPos]);
-		regionFile->read(reinterpret_cast<char *>(data),SECTOR_SIZE*counts[zPos][xPos]);
+		regionFile.read(reinterpret_cast<char *>(data),SECTOR_SIZE*counts[zPos][xPos]);
 	}
 
 	return ChunkInterface(chunkTable[zPos][xPos]);
@@ -71,7 +73,6 @@ bool RegionData::chunkLoaded(uint8_t xPos,uint8_t zPos) {
 
 
 RegionData::~RegionData() {
-	delete regionFile;
 	for(unsigned int i = 0;i<REGIONX;i++)
 		for(unsigned int j = 0;j<REGIONZ;j++)
 			delete chunkTable[j][i];
@@ -94,6 +95,16 @@ RegionInterface::RegionInterface(RegionData* pointer) : Counter(pointer) , point
 }
 
 RegionInterface::RegionInterface(const RegionInterface &B) : Counter(B.data) , pointer(B.pointer){
+}
+
+void RegionInterface::swap(RegionInterface &B) {
+	Counter::swap(B);
+	std::swap(pointer,B.pointer);
+}
+
+RegionInterface& RegionInterface::operator=(RegionInterface B) {
+	swap(B);
+	return *this;
 }
 
 ChunkInterface RegionInterface::getChunk(uint8_t xPos,uint8_t zPos) const {

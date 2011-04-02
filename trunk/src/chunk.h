@@ -3,6 +3,8 @@
 
 #include <stdint.h>
 #include "refcount.h"
+#include "nbt.h"
+
 const uint32_t MEGABYTE = 1024*1024;
 const uint16_t SECTOR_SIZE = 4096;
 const uint8_t CHUNKX = 16;
@@ -117,9 +119,6 @@ enum WoolColour {
 	BLACK
 };
 
-class nbtFile;
-class Tag;
-class TagCompound;
 /**
 * @class Chunk
 * @brief Class to represent a chunk of the world
@@ -139,8 +138,8 @@ class ChunkData : public Countee {
 		uint8_t compressionType;
 		bool modified;
 		nbtFile* chunkFile;
-		ChunkData(const ChunkData&);
-		ChunkData& operator=(const ChunkData&);
+		ChunkData(const ChunkData&) = delete;
+		ChunkData& operator=(const ChunkData&) = delete;
 		friend class ChunkInterface;
 		Tag* getTag(const std::string &);	
 	public:
@@ -174,7 +173,10 @@ class ChunkInterface : public Counter {
 		uint8_t (*blockPointer)[CHUNKZ][CHUNKY];
 		void modified();
 		void setupPointers();
+		void swap( ChunkInterface &);
 	public:
+		ChunkInterface& operator=(ChunkInterface);
+
 		ChunkInterface(const ChunkInterface&);
 		void setBlock(uint8_t xPos,uint8_t yPos,uint8_t zPos,BlockType block);	
 		BlockType getBlock(uint8_t xPos,uint8_t yPos,uint8_t zPos) const;

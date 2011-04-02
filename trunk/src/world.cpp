@@ -75,6 +75,7 @@ nbtFile* World::readCompressedNBT(const std::string &filename) {
 	assert(readval != 0);
 	nbtFile* temp = new nbtFile(data);
 	delete[] data;
+	gzclose(gzfile);
 	return temp;
 }
 

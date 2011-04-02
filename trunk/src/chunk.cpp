@@ -129,6 +129,16 @@ void ChunkInterface::modified() {
 	chunkPointer->modified = true;
 }
 
+void ChunkInterface::swap(ChunkInterface &B) {
+	std::swap(blockPointer,B.blockPointer);
+	std::swap(chunkPointer,B.chunkPointer);	
+}
+
+ChunkInterface& ChunkInterface::operator=(ChunkInterface B) {
+	swap(B);
+	return *this;
+}
+
 BlockType ChunkInterface::getBlock(uint8_t xPos,uint8_t yPos,uint8_t zPos) const {
 	return static_cast<BlockType>(blockPointer[xPos][zPos][yPos]);
 }

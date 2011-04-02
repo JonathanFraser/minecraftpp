@@ -33,6 +33,7 @@ class Counter {
 	public:
 		Counter(Countee*);
 		Counter(const Counter&);
+		void swap(Counter&);
 		virtual ~Counter();
 		unsigned int getCount();
 };

@@ -14,14 +14,20 @@ class RegionData : public Countee {
 	private:
 		int64_t X;
 		int64_t Y;
+
 		uint32_t timeStamps[REGIONX][REGIONZ];
 		uint32_t offsets[REGIONX][REGIONZ];
-		ChunkData* chunkTable[REGIONX][REGIONZ];
 		uint8_t counts[REGIONX][REGIONZ];
-		std::ifstream *regionFile;
+		ChunkData* chunkTable[REGIONX][REGIONZ];
+		
+		std::ifstream regionFile;
 		void readRegionData();
 		void thaw() {};
 		void freeze();
+
+		RegionData(const RegionData &) = delete;
+		void operator=(const RegionData &) = delete;	
+
 	public:
 		RegionData(std::string filename);
 		ChunkInterface getChunk(uint8_t xPos,uint8_t zPos);
@@ -35,8 +41,10 @@ class RegionInterface : public Counter {
 		friend class World;
 		RegionData* pointer;
 		RegionInterface(RegionData* pointer);
+		void swap(RegionInterface &);
 	public:
 		RegionInterface(const RegionInterface&);
+		RegionInterface & operator=(RegionInterface);
 		ChunkInterface getChunk(uint8_t xPos,uint8_t zPos) const;
 		bool chunkInFile(uint8_t xPos,uint8_t zPos) const ;
 		bool chunkLoaded(uint8_t xPos,uint8_t zPos);
