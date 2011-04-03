@@ -2,7 +2,7 @@
 #define __CHUNK_H
 
 #include <stdint.h>
-#include "refcount.h"
+#include "ref_count.h"
 #include "nbt.h"
 
 const uint32_t MEGABYTE = 1024*1024;

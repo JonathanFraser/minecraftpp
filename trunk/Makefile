@@ -1,4 +1,4 @@
-TARGETS = chunkreader nbtTest mapper
+TARGETS = chunk_reader NBT_test mapper
 PACKAGES := zlib libpng
 CXX = g++
 SOURCES := $(wildcard src/*.cpp)
