@@ -6,6 +6,9 @@
 #include "ref_count.h"
 #include "nbt.h"
 
+class RegionData;
+class RegionInterface;
+
 /**
 * @class ChunkData
 * @brief Class to represent a chunk of the world
@@ -24,13 +27,15 @@ class ChunkData : public Countee {
 		uint32_t length;
 		uint8_t compressionType;
 		bool modified;
+		RegionInterface* parentInterface;
+		RegionData* parent;
 		nbtFile* chunkFile;
 		ChunkData(const ChunkData&) = delete;
 		ChunkData& operator=(const ChunkData&) = delete;
 		friend class ChunkInterface;
 		Tag* getTag(const std::string &);	
 	public:
-		ChunkData();
+		ChunkData(RegionData *parent);
 		
 		/**
 		* Forces the data to decompress if a pointer was grabbed

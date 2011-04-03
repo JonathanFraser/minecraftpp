@@ -49,13 +49,13 @@ ChunkInterface RegionData::getChunk(uint8_t xPos,uint8_t zPos) {
 	assert(xPos<REGIONX);
 	assert(zPos<REGIONZ);
 	if( !chunkInFile(xPos,zPos) ) {
-		chunkTable[zPos][xPos] = new ChunkData();
+		chunkTable[zPos][xPos] = new ChunkData(this);
 		timeStamps[zPos][xPos] = time(NULL);
 	}
 
 	if(!chunkLoaded(xPos,zPos)) {
 		regionFile.seekg(offsets[zPos][xPos]*SECTOR_SIZE,std::ios::beg);
-		chunkTable[zPos][xPos] = new ChunkData();
+		chunkTable[zPos][xPos] = new ChunkData(this);
 		uint8_t* data = chunkTable[zPos][xPos]->getDataPointer(counts[zPos][xPos]);
 		regionFile.read(reinterpret_cast<char *>(data),SECTOR_SIZE*counts[zPos][xPos]);
 	}

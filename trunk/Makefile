@@ -26,7 +26,7 @@ build/%.o: src/%.cpp build/%.d
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 build/%.d: src/%.cpp
-	$(CXX) $(CXXFLAGS) -o $@ -MM $< -MT $(patsubst build/%.d,build/%.o,$@)
+	$(CXX) $(CXXFLAGS) -o $@ -MM $< -MT $(patsubst build/%.d,build/%.o,$@) || rm $@
 
 .PHONY: clean clean_dep clean_obj clean_bin clean_doc
 clean: clean_dep clean_obj clean_bin clean_doc

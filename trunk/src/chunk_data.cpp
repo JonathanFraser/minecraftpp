@@ -5,6 +5,9 @@
 #include <cstdlib>
 
 #include "chunk_data.h"
+#include "region_data.h"
+#include "region_interface.h"
+
 #include "nbt.h"
 #include "util.h"
 const std::string LEVEL = "Level";
@@ -21,7 +24,7 @@ const std::string Z_POS = "zPos";
 const std::string TERRAIN_POPULATED = "TerrainPopulated";
 
 
-ChunkData::ChunkData() : gzipData(NULL), sectorCount(0),length(0),compressionType(0),modified(false), chunkFile(NULL){
+ChunkData::ChunkData(RegionData* parent) : gzipData(NULL), sectorCount(0),length(0),compressionType(0),modified(false), parentInterface(NULL),parent(parent),chunkFile(NULL){
 
 }
 
@@ -86,6 +89,8 @@ void ChunkData::thaw() {
 		//we done with the crap so get rid of it
 		delete[] outputdata;	
 	}
+	assert(parentInterface == NULL);
+	parentInterface = new RegionInterface(parent);
 }
 
 void ChunkData::freeze() {
@@ -108,5 +113,7 @@ void ChunkData::freeze() {
 		delete chunkFile;
 		chunkFile=NULL;
 	}
+	delete parentInterface;
+	parentInterface = NULL;
 }
 

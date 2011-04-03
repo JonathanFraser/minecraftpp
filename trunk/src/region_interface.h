@@ -13,6 +13,7 @@ class RegionData;
 class RegionInterface : public Counter {
 	private:
 		friend class World;
+		friend class ChunkData;
 		RegionData* pointer;
 		RegionInterface(RegionData* pointer);
 		void swap(RegionInterface &);
