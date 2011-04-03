@@ -2,7 +2,9 @@
 #include <string>
 #include <fstream>
 #include "ref_count.h"
-#include "chunk.h"
+#include "chunk_interface.h"
+#include "chunk_data.h"
+
 
 #ifndef __REGION_H
 #define __REGION_H
