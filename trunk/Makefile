@@ -1,5 +1,5 @@
-TARGETS = chunkreader nbtTest
-PACKAGES := zlib
+TARGETS = chunkreader nbtTest mapper
+PACKAGES := zlib libpng
 CXX = g++
 SOURCES := $(wildcard src/*.cpp)
 OBJECTS := $(patsubst src/%.cpp,build/%.o,$(SOURCES))
