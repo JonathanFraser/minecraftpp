@@ -1,13 +1,12 @@
+#ifndef __REGION_DATA_H
+#define __REGION_DATA_H
+
 #include <stdint.h>
 #include <string>
 #include <fstream>
 #include "ref_count.h"
 #include "chunk_interface.h"
 #include "chunk_data.h"
-
-
-#ifndef __REGION_H
-#define __REGION_H
 
 const uint8_t REGIONX = 32;
 const uint8_t REGIONZ = 32;
@@ -36,19 +35,5 @@ class RegionData : public Countee {
 		bool chunkInFile(uint8_t xPos,uint8_t zPos);
 		bool chunkLoaded(uint8_t xPos,uint8_t zPos);
 		~RegionData();
-};
-
-class RegionInterface : public Counter {
-	private:
-		friend class World;
-		RegionData* pointer;
-		RegionInterface(RegionData* pointer);
-		void swap(RegionInterface &);
-	public:
-		RegionInterface(const RegionInterface&);
-		RegionInterface & operator=(RegionInterface);
-		ChunkInterface getChunk(uint8_t xPos,uint8_t zPos) const;
-		bool chunkInFile(uint8_t xPos,uint8_t zPos) const ;
-		bool chunkLoaded(uint8_t xPos,uint8_t zPos);
 };
 #endif

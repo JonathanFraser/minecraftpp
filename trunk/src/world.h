@@ -1,6 +1,7 @@
 #ifndef __WORLD_H
 #define __WORLD_H
-#include "region.h"
+#include "region_data.h"
+#include "region_interface.h"
 #include "nbt.h"
 
 #include <string>

@@ -1,4 +1,4 @@
-#include "region.h"
+#include "region_interface.h"
 #include "world.h"
 
 #include <cassert>
