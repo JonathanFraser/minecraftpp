@@ -17,7 +17,7 @@ BlockType maxValue(BlockType curr,BlockType prev) {
 }
 
 int main(void) {
-	World B("/home/binaryblade/world");
+	World B("./world");
 	Coord tL = B.getTopLeft();
 	Coord bR = B.getBottomRight();
 	BlockType* dataArray = new BlockType[16*16*32*32];
