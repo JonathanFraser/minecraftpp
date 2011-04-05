@@ -100,6 +100,9 @@ enum BlockType {
 	BLOCK_REDSTONE_REPEATER_ON
 };
 
+//commented out until namespaces are here
+
+/*
 enum WoolColour {
 	WHITE,
 	ORANGE,
@@ -118,7 +121,7 @@ enum WoolColour {
 	RED,
 	BLACK
 };
-
+*/
 class ChunkData;
 
 class ChunkInterface : public Counter {
