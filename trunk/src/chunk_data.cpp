@@ -78,6 +78,7 @@ void ChunkData::thaw() {
 		
 		//grab the chunk header info
 		length=arrayToInt(data2);
+		assert(sectorCount - (length + 5)/SECTOR_SIZE <= 1);
 		compressionType = *data2++;
 		
 		//such a simple decompressor

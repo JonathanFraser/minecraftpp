@@ -3,16 +3,50 @@
 #include <sstream>
 #include <iostream>
 
-unsigned long int array[256];
+uint8_t ID;
+typedef png::rgb_pixel pixel;
+typedef png::image<pixel> PNG;
 
-typedef png::image<png::rgb_pixel> PNG;
+pixel getColour(BlockType block) {
+	if(block == ID)
+		return pixel(255,0,0);
+
+	if(block == BLOCK_DIRT)
+		return pixel(0,255,0);
+	
+	if(block == BLOCK_WATER)
+		return pixel(0,0,255);
+	
+	assert(false);
+	return pixel(0,0,0);
+}	
+
+BlockType getMaximum(BlockType old_block,BlockType new_block) {
+	if(new_block == ID || old_block == ID)
+		return static_cast<BlockType>(ID);
+	
+	if(new_block != BLOCK_AIR && old_block == BLOCK_AIR) {
+
+		if(new_block == BLOCK_WATER || new_block == BLOCK_STATIONARY_WATER || new_block == BLOCK_ICE)
+			return BLOCK_WATER;
+
+		return BLOCK_DIRT;
+	}
+
+	return old_block; 
+}
 
 void scanChunk(PNG* image,unsigned int xoffset,unsigned int zoffset, ChunkInterface chunk) {
 	for(unsigned int x=0;x<16;x++)
-		for(unsigned int z=0;z<16;z++)
-			for(unsigned int y=0;y<128;y++) {
-				array[chunk.getBlock(x,y,z)]++;
+		for(unsigned int z=0;z<16;z++) {
+			unsigned int xvar = xoffset + x;
+			unsigned int zvar = zoffset + (15-z);
+			BlockType temp = BLOCK_AIR;
+			for(unsigned int y=127;y<128;y--) {
+				temp = getMaximum(temp,chunk.getBlock(x,y,z));
 			}
+			(*image)[xvar][zvar] = getColour(temp);
+		}
 	return;
 }
 
@@ -37,32 +71,41 @@ int main(int argc,char *argv[]) {
 		std::cout << "Correct use is: \n \t mapper world_dir blockID" << std::endl;
 		return -1;
 	}
-	uint8_t ID;
-	for(int i=0;i<256;i++)
-		array[i]=0;
-
+	uint32_t dataval;
 	std::string worlddir(argv[1]);
 	std::string blockid(argv[2]);
 	std::stringstream stream;
 	stream.str(blockid);
-	stream >> ID;
+	stream >> dataval;
+	ID = dataval;
 	World map(worlddir);
 	Coord tL = map.getTopLeft();
 	Coord bR = map.getBottomRight();
 	unsigned int width = tL.second - bR.second+1; 
 	unsigned int height = bR.first - tL.first+1;  
-	std::cout << "Width: " << width << std::endl;
-	std::cout << "Height: " << height << std::endl;
-	PNG image(512*height,512*width);
+//	std::cout << "Width: " << width << std::endl;
+//	std::cout << "Height: " << height << std::endl;
+	PNG image(512*width,512*height);
 	for(long int x = tL.first;x<=bR.first;x++)
 		for(long int z = bR.second;z<=tL.second;z++){
+		unsigned int xoffset = (x-tL.first)*512;
+		unsigned int zoffset = (tL.second - z)*512;
 		if(map.regionInDir(x,z)) {
-			scanRegion(&image,(x-tL.first)*512,(tL.second - z)*512,map.getRegion(x,z));
+			scanRegion(&image,xoffset,zoffset,map.getRegion(x,z));
+		} else {
+			for(unsigned int i=0;i<512;i++)
+				for(unsigned int j=0;j<512;j++) {
+					assert(xoffset+i < image.get_height());
+					assert(zoffset+j < image.get_width());
+					image[xoffset+i][zoffset+j] = pixel(255,255,255);
+				}
 		}
 	}
-	
-	for(int i=0;i<256;i++) {
-	//	std::cout << i << " : " << array[i] << std::endl;
-	}
+	std::stringstream png_name;
+	png_name << "BLOCKID_";
+	png_name << (int)ID;
+	png_name << ".png";
+	std::cout << png_name.str() << std::endl;
+	image.write(png_name.str().c_str());	
 	return 0;
 }

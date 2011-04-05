@@ -54,6 +54,7 @@ ChunkInterface RegionData::getChunk(uint8_t xPos,uint8_t zPos) {
 	}
 
 	if(!chunkLoaded(xPos,zPos)) {
+		assert(offsets[zPos][xPos] >= 2 && counts[zPos][xPos] > 0);
 		regionFile.seekg(offsets[zPos][xPos]*SECTOR_SIZE,std::ios::beg);
 		chunkTable[zPos][xPos] = new ChunkData(this);
 		uint8_t* data = chunkTable[zPos][xPos]->getDataPointer(counts[zPos][xPos]);
@@ -64,7 +65,7 @@ ChunkInterface RegionData::getChunk(uint8_t xPos,uint8_t zPos) {
 }
 
 bool RegionData::chunkInFile(uint8_t xPos,uint8_t zPos) {
-	return (offsets[zPos][xPos] || counts[zPos][xPos] || timeStamps[zPos][xPos]);
+	return (offsets[zPos][xPos] || counts[zPos][xPos]);
 }
 
 bool RegionData::chunkLoaded(uint8_t xPos,uint8_t zPos) {
