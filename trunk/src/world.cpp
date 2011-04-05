@@ -105,6 +105,14 @@ Coord World::getBottomRight() {
 	return bottomRight;
 }
 
+Coord World::getBottomLeft() {
+	return	Coord(bottomRight.first,topLeft.second); 
+}
+
+Coord World::getTopRight() {
+	return Coord(topLeft.first,bottomRight.second);
+}
+
 RegionInterface World::getRegion(int32_t x,int32_t z) {
 	assert(regionInDir(x,z));
 	if(!regionLoaded(x,z)) {

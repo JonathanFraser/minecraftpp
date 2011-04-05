@@ -36,6 +36,8 @@ class World {
 		bool regionInDir(int32_t x,int32_t z);
 		bool regionLoaded(int32_t x,int32_t z);
 		Coord getTopLeft();
+		Coord getTopRight();
+		Coord getBottomLeft();
 		Coord getBottomRight();
 		RegionInterface getRegion(int32_t x,int32_t z);
 		unsigned int regionCount() const;
