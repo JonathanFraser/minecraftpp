@@ -14,7 +14,26 @@ struct location {
 	uint8_t y;
 };
 
-const uint8_t trackedblocks[] = {82};
+const uint8_t trackedblocks[] = {
+	BLOCK_GOLD_ORE,
+	BLOCK_IRON_ORE,
+	BLOCK_COAL_ORE,
+	BLOCK_LAPIS_ORE,
+	BLOCK_YELLOW_FLOWER,
+	BLOCK_ROSE,
+	BLOCK_BROWN_MUSHROOM,
+	BLOCK_RED_MUSHROOM, /* 40 */
+	BLOCK_MOSSY_COBBLESTONE,
+	BLOCK_OBSIDIAN,
+	BLOCK_SPAWNER,
+	BLOCK_DIAMOND_ORE,
+	BLOCK_REDSTONE_ORE,
+	BLOCK_GLOWING_REDSTONE_ORE,
+	BLOCK_CACTUS,
+	BLOCK_CLAY_BLOCK,
+	BLOCK_SUGAR_CANE,
+	BLOCK_PUMPKIN
+};
 
 typedef std::vector<location> LocVector;
 typedef std::map<uint8_t,LocVector> CoordMap;
@@ -60,13 +79,16 @@ int main(void) {
 			}
 		}
 
+	uint64_t count=0;
 	for(CoordMap::iterator i=points.begin();i!=points.end();i++) {
-		std::cout << "block ID: " << (int) i->first << std::endl;
+		//std::cout << "block ID: " << (int) i->first << std::endl;
 		for(LocVector::iterator j=i->second.begin();j!=i->second.end();j++) {
-			std::cout << j->x << ","<< j->z << "  ";
+			//std::cout << j->x << ","<< j->z << "  ";
+			count++;
 		}
-		std::cout << std::endl;	
+		//std::cout << std::endl;	
 	}
+	std::cout << count << std::endl;
 		
 	return 0;
 }
