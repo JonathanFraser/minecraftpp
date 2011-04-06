@@ -1,5 +1,5 @@
 TARGETS = chunk_reader NBT_test mapper
-PACKAGES := zlib libpng
+PACKAGES := zlib libpng libpqxx
 CXX = g++
 SOURCES := $(wildcard src/*.cpp)
 OBJECTS := $(patsubst src/%.cpp,build/%.o,$(SOURCES))

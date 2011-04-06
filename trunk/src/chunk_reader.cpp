@@ -1,8 +1,11 @@
 #include "region_interface.h"
 #include "world.h"
 
+#include <pqxx/pqxx>
+ 
 #include <cassert>
 #include <iostream>
+#include <sstream>
 #include <cstdio>
 #include <map>
 #include <vector>
@@ -29,9 +32,7 @@ const uint8_t trackedblocks[] = {
 	BLOCK_DIAMOND_ORE,
 	BLOCK_REDSTONE_ORE,
 	BLOCK_GLOWING_REDSTONE_ORE,
-	BLOCK_CACTUS,
 	BLOCK_CLAY_BLOCK,
-	BLOCK_SUGAR_CANE,
 	BLOCK_PUMPKIN
 };
 
@@ -39,14 +40,17 @@ typedef std::vector<location> LocVector;
 typedef std::map<uint8_t,LocVector> CoordMap;
 typedef std::pair<uint8_t,LocVector> MapItem;
 
+
 int main(void) {
 	World B("./world");
 	CoordMap points;
 	Coord tR = B.getTopRight();
 	Coord bL = B.getBottomLeft();
+	std::map<uint8_t,uint64_t> counts;
 	
 	for(uint8_t i=0;i<sizeof(trackedblocks);i++) {
 		points.insert(MapItem(trackedblocks[i],LocVector()));
+		counts.insert(std::pair<uint8_t,uint64_t>(trackedblocks[i],0));
 	}
 
 	for(int64_t regionX=tR.first;regionX<bL.first;regionX++)
@@ -63,32 +67,47 @@ int main(void) {
 								int64_t zloc = regionZ*32*16 + chunkZ*16 + z;
 								for(uint8_t y=0;y<128;y++) {
 									uint8_t block = temp.getBlock(x,y,z);
-									for(uint8_t i=0;i<sizeof(trackedblocks);i++) {
-										if(block == trackedblocks[i]) {
-											location loc;
-											loc.x = xloc;
-											loc.y = y;
-											loc.z = zloc;
-											points[block].push_back(loc);
-										}	
-									}	
-								}
+									location loc;
+									loc.x = xloc;
+									loc.y = y;
+									loc.z = zloc;
+									CoordMap::iterator iter = points.find(block);
+									if( iter != points.end()) {
+											iter->second.push_back(loc);	
+											counts.find(block)->second++;
+									}
+								}	
 							}
+						}
 					}
-				}	
+					
 			}
 		}
+	
+	
+	pqxx::connection Conn("dbname=minecraft");	
+	std::vector<std::string> names;
+	names.push_back("id");
+	names.push_back("x");
+	names.push_back("z");
+	names.push_back("y");
+	for(CoordMap::iterator i= points.begin();i!=points.end();i++) {
+		pqxx::work trans(Conn);
+		pqxx::tablewriter table(trans,"resources",names.begin(),names.end());
+		for(LocVector::iterator j = i->second.begin();j<i->second.end();j++) {
+		std::stringstream stream;
+		std::vector<long int> tuple;
+			tuple.push_back(i->first);
+			tuple.push_back(j->x);
+			tuple.push_back(j->z);
+			tuple.push_back(j->y);
 
-	uint64_t count=0;
-	for(CoordMap::iterator i=points.begin();i!=points.end();i++) {
-		//std::cout << "block ID: " << (int) i->first << std::endl;
-		for(LocVector::iterator j=i->second.begin();j!=i->second.end();j++) {
-			//std::cout << j->x << ","<< j->z << "  ";
-			count++;
+		//std::cout << table.generate(tuple) << std::endl;
+		table.push_back(tuple);
 		}
-		//std::cout << std::endl;	
+		table.complete();
+		trans.commit();
 	}
-	std::cout << count << std::endl;
 		
 	return 0;
 }
