@@ -1,5 +1,7 @@
 #include "region.h"
+#include "chunk_data.h"
 #include "region_data.h"
+
 #include "util.h"
 #include <algorithm>
 

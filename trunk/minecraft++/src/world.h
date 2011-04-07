@@ -1,6 +1,5 @@
 #ifndef __WORLD_H
 #define __WORLD_H
-#include "region_data.h"
 #include "region.h"
 #include "nbt.h"
 
@@ -9,6 +8,8 @@
 #include <utility>
 #include <vector>
 #include <map>
+
+class RegionData;
 
 typedef std::pair<int32_t,int32_t> Coord; 
 typedef std::vector<Coord> CoordVector;

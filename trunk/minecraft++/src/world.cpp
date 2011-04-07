@@ -1,4 +1,5 @@
 #include "world.h"
+#include "region_data.h"
 #include <zlib.h>
 
 #include <fstream>
