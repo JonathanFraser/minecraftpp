@@ -18,6 +18,9 @@ class Countee {
 		virtual void freeze() = 0;
 		virtual void thaw() = 0;
 	public:
+		///
+		/// returns the number of open references
+		///
 		unsigned int getCount();
 };
 
@@ -28,14 +31,16 @@ class Countee {
 **/
 class Counter {
 	protected:
-		
-		Countee* data;
-	public:
 		Counter(Countee*);
 		Counter(const Counter&);
 		void swap(Counter&);
 		virtual ~Counter();
-		unsigned int getCount();
+		Countee* data;
+	public:
+			///
+			/// returns the number of open references
+			///
+			unsigned int getCount();
 };
 
 #endif
