@@ -81,6 +81,7 @@ cleandep :
 .PHONY : cleandoc
 cleandoc :
 	$(RM) -rf html
+	$(RM) -rf latex
 
 .PHONY : cleanobj
 cleanobj :
