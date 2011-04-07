@@ -57,7 +57,7 @@ size_t TagByte::write(uint8_t *&data,size_t size) {
 
 void TagByte::print(std::ostream &output, unsigned int level) {
 	printTabs(output,level);
-	output << "Byte: " << (int) data << std::endl;
+	output << "Byte: " << static_cast<int>(data) << std::endl;
 }
 
 TagShort::TagShort(uint8_t *&data) :Tag(TAG_Short) {
@@ -72,7 +72,7 @@ size_t TagShort::write(uint8_t *&data,size_t size) {
 
 void TagShort::print(std::ostream& output, unsigned int level) {
 	printTabs(output,level);
-	output << "Short: " << (int) data << std::endl;
+	output << "Short: " << static_cast<int>(data) << std::endl;
 }
 
 TagInt::TagInt(uint8_t *&data) : Tag(TAG_Int) {
@@ -87,7 +87,7 @@ size_t TagInt::write(uint8_t *&data,size_t size) {
 
 void TagInt::print(std::ostream &output, unsigned int level) {
 	printTabs(output,level);
-	output << "Int: " << (int) data << std::endl;
+	output << "Int: " << static_cast<int>(data) << std::endl;
 }
 
 TagLong::TagLong(uint8_t *&data) : Tag(TAG_Long) {
@@ -102,7 +102,7 @@ size_t TagLong::write(uint8_t *&data,size_t size) {
 
 void TagLong::print(std::ostream &output, unsigned int level) {
 	printTabs(output,level);
-	output << "Long: " << (long int) data << std::endl;
+	output << "Long: " << static_cast<long int>(data) << std::endl;
 }
 
 TagFloat::TagFloat(uint8_t *&data) : Tag(TAG_Float) {

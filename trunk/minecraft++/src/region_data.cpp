@@ -9,10 +9,10 @@
 
 RegionData::RegionData(std::string filename) : regionFile(filename.c_str()) {
 	//parse filename to get X and Y
-	unsigned int start = filename.find("r.");
-	unsigned int stop = filename.find(".mcr");
+	size_t start = filename.find("r.");
+	size_t stop = filename.find(".mcr");
 	std::string nums =filename.substr(start+2,stop-start-2);
-	unsigned int dotpos = nums.find(".");
+	size_t dotpos = nums.find(".");
 	std::string Xstr = nums.substr(0,dotpos);
 	std::string Ystr = nums.substr(dotpos+1,nums.length() - dotpos-1);
 	X=atoll(Xstr.c_str());

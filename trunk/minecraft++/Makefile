@@ -1,14 +1,11 @@
 #
-# Some rules will need second expansions as they are static pattern rules which do variable dereferences based on target name.
-#
-.SECONDEXPANSION:
-
-#
 # Build a full CXXFLAGS, LDFLAGS, and LIBS.
 #
 override PACKAGES := zlib
 SOURCES = src
-override CXXFLAGS := $(shell pkg-config --cflags $(PACKAGES) | sed 's/-I/-isystem /g') -std=gnu++0x $(CXXFLAGS)
+
+override CXXFLAGS := -std=gnu++0x -Wall -Wextra -Wconversion -Wundef -Wold-style-cast -march=native -O3 -g -pthread $(CXXFLAGS)
+override CXXFLAGS := $(shell pkg-config --cflags $(PACKAGES) | sed 's/-I/-isystem /g') $(CXXFLAGS)
 override LDFLAGS := $(shell pkg-config --libs-only-other --libs-only-L $(PACKAGES)) $(LDFLAGS)
 override LIBS := $(shell pkg-config --libs-only-l $(PACKAGES)) $(LIBS)
 
@@ -33,7 +30,7 @@ doc :
 #
 # Rule to link a final executable.
 #
-bin/minecraftpp.a : $$(addprefix build/,$$(subst .cpp,.o,$$(shell find $(SOURCES) -name .svn -prune -o -name '*.cpp' -print) ))
+bin/minecraftpp.a : $(addprefix build/,$(subst .cpp,.o,$(shell find $(SOURCES) -name .svn -prune -o -name '*.cpp' -print) ))
 	echo "  LD	$@"
 	mkdir -p bin
 	$(AR)	rcs $@ $+

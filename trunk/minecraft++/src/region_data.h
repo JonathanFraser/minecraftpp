@@ -16,7 +16,7 @@ class RegionData : public Countee {
 		int64_t X;
 		int64_t Y;
 
-		uint32_t timeStamps[REGIONX][REGIONZ];
+		time_t timeStamps[REGIONX][REGIONZ];
 		uint32_t offsets[REGIONX][REGIONZ];
 		uint8_t counts[REGIONX][REGIONZ];
 		ChunkData* chunkTable[REGIONX][REGIONZ];
