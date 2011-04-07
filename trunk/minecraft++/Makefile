@@ -1,33 +1,22 @@
-# ========== STOP ========== STOP ========== STOP ==========
-#
-# The contents of this file should not generally be modified.
-# The rules in this file are generic and compatible with building multiple executables.
-# To change the set of executables compiled, the set sources for each executable, or the compilation or linking flags, edit project.mk instead.
-#
-# ========== STOP ========== STOP ========== STOP ==========
-
 #
 # Some rules will need second expansions as they are static pattern rules which do variable dereferences based on target name.
 #
-.SECONDEXPANSION :
-
-#
-# Pull in the project rules.
-#
-include project.mk
+.SECONDEXPANSION:
 
 #
 # Build a full CXXFLAGS, LDFLAGS, and LIBS.
 #
-override CXXFLAGS := $(PROJECT_CXXFLAGS) $(shell pkg-config --cflags $(PACKAGES) | sed 's/-I/-isystem /g') $(CXXFLAGS)
-override LDFLAGS := $(PROJECT_LDFLAGS) $(shell pkg-config --libs-only-other --libs-only-L $(PACKAGES)) $(LDFLAGS)
-override LIBS := $(PROJECT_LIBS) $(shell pkg-config --libs-only-l $(PACKAGES)) $(LIBS)
+override PACKAGES := zlib
+SOURCES = src
+override CXXFLAGS := $(shell pkg-config --cflags $(PACKAGES) | sed 's/-I/-isystem /g') -std=gnu++0x $(CXXFLAGS)
+override LDFLAGS := $(shell pkg-config --libs-only-other --libs-only-L $(PACKAGES)) $(LDFLAGS)
+override LIBS := $(shell pkg-config --libs-only-l $(PACKAGES)) $(LIBS)
 
 #
 # The target to build everything.
 #
 .PHONY : world
-world : $(addprefix bin/,$(EXECUTABLES))
+world:bin/minecraftpp.a
 
 #
 # Prevent echoing of compilation commands.
@@ -44,15 +33,15 @@ doc :
 #
 # Rule to link a final executable.
 #
-$(addprefix bin/,$(EXECUTABLES)) : bin/% : $$(addprefix obj/,$$(subst .cc,.o,$$(subst .cpp,.o,$$(shell find $$(SOURCES_%) -name .svn -prune -o -name '*.cpp' -print) $$(if $$(filter proto,$$(SOURCES_%)),$(PROTOBUF_CCS)))))
+bin/minecraftpp.a : $$(addprefix build/,$$(subst .cpp,.o,$$(shell find $(SOURCES) -name .svn -prune -o -name '*.cpp' -print) ))
 	echo "  LD	$@"
 	mkdir -p bin
-	$(CXX) $(LDFLAGS) -o$@ $+ $(LIBS)
+	$(AR)	rcs $@ $+
 
 #
 # Rule to make a .d file from a .cpp file.
 #
-obj/%.d : %.cpp
+build/%.d : %.cpp
 	echo "  DEP	$@"
 	mkdir -p $(dir $@)
 	$(CXX) $(CXXFLAGS) -MT '$(@:.d=.o) $@' -MM -MF $@ $< || { $(RM) $@; false; }
@@ -60,7 +49,7 @@ obj/%.d : %.cpp
 #
 # Rule to make a .o file from a .cpp file.
 #
-obj/%.o : %.cpp
+build/%.o : %.cpp
 	echo "  CXX	$@"
 	mkdir -p $(dir $@)
 	$(CXX) $(CXXFLAGS) -o$@ -c $<
@@ -68,7 +57,7 @@ obj/%.o : %.cpp
 #
 # Include all the dependency files.
 #
-ALL_D_FILES=$(addprefix obj/,$(subst ./,,$(subst .cpp,.d,$(shell find . -name .svn -prune -o -name '*.cpp' -print))))
+ALL_D_FILES=$(addprefix build/,$(subst ./,,$(subst .cpp,.d,$(shell find . -name .svn -prune -o -name '*.cpp' -print))))
 
 include $(ALL_D_FILES)
 
@@ -82,7 +71,7 @@ dep : $(ALL_D_FILES)
 # Rules to clean.
 #
 .PHONY : clean
-clean : cleanbin cleandoc cleanobj cleanpb cleantags
+clean : cleanbin cleandoc cleanobj
 
 .PHONY : cleanbin
 cleanbin :
@@ -90,7 +79,7 @@ cleanbin :
 
 .PHONY : cleandep
 cleandep :
-	find obj -name '*.d' -delete
+	find build -name '*.d' -delete
 
 .PHONY : cleandoc
 cleandoc :
@@ -98,4 +87,4 @@ cleandoc :
 
 .PHONY : cleanobj
 cleanobj :
-	$(RM) -rf obj
+	$(RM) -rf build

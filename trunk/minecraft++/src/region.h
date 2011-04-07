@@ -5,7 +5,7 @@
 #include <string>
 #include <fstream>
 #include "ref_count.h"
-#include "chunk_interface.h"
+#include "chunk.h"
 #include "chunk_data.h"
 
 class RegionData;

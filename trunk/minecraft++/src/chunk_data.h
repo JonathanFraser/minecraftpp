@@ -2,7 +2,7 @@
 #define __CHUNK_DATA_H
 
 #include <stdint.h>
-#include "chunk_interface.h"
+#include "chunk.h"
 #include "ref_count.h"
 #include "nbt.h"
 

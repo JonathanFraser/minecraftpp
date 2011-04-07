@@ -6,7 +6,7 @@
 
 #include "chunk_data.h"
 #include "region_data.h"
-#include "region_interface.h"
+#include "region.h"
 
 #include "nbt.h"
 #include "util.h"
