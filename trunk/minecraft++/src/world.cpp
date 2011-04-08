@@ -1,5 +1,6 @@
 #include "world.h"
 #include "region_data.h"
+
 #include <zlib.h>
 
 #include <fstream>
@@ -7,11 +8,12 @@
 #include <iostream>
 #include <cassert>
 
-const std::string World::REGION_DIR = "/region/";
-const std::string World::FILE_PREFIX = "r.";
-const std::string World::FILE_SUFFIX = ".mcr";
-const std::string World::SEPARATOR = ".";
+const char REGION_DIR[] = "/region/";
+const char FILE_PREFIX[] = "r.";
+const char FILE_SUFFIX[] = ".mcr";
+const char SEPARATOR[] = ".";
 		
+using namespace minecraftpp;
 
 World::World(const std::string &worldfolder): topLeft(Coord(0,0)),bottomRight(Coord(0,0)),dirName(worldfolder) {
 	CoordVector temp;

@@ -7,6 +7,8 @@
 #include "ref_count.h"
 #include "chunk.h"
 
+namespace minecraftpp {
+
 class RegionData;
 
 class RegionInterface : public Counter {
@@ -23,4 +25,6 @@ class RegionInterface : public Counter {
 		bool chunkInFile(uint8_t xPos,uint8_t zPos) const ;
 		bool chunkLoaded(uint8_t xPos,uint8_t zPos);
 };
+
+}
 #endif

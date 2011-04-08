@@ -9,6 +9,7 @@
 #include <vector>
 #include <map>
 
+namespace minecraftpp {
 class RegionData;
 
 typedef std::pair<int32_t,int32_t> Coord; 
@@ -17,10 +18,6 @@ typedef std::map<Coord,RegionData*> RegionMap;
 
 class World {
 	private:
-		static const std::string REGION_DIR;
-		static const std::string FILE_PREFIX;
-		static const std::string FILE_SUFFIX;
-		static const std::string SEPARATOR;
 		CoordVector coords;
 		Coord topLeft;
 		Coord bottomRight;
@@ -43,5 +40,5 @@ class World {
 		RegionInterface getRegion(int32_t x,int32_t z);
 		unsigned int regionCount() const;
 };
-
+}
 #endif

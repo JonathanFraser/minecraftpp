@@ -7,22 +7,12 @@
 #include "chunk_data.h"
 #include "region_data.h"
 #include "region.h"
+#include "types.h"
 
 #include "nbt.h"
 #include "util.h"
-const std::string LEVEL = "Level";
-const std::string BLOCKS = "Blocks";
-const std::string BLOCK_DATA = "Data";
-const std::string SKY_LIGHT = "SkyLight";
-const std::string BLOCK_LIGHT = "BlockLight";
-const std::string HEIGHT_MAP = "HeightMap";
-const std::string ENTITIES = "Entities";
-const std::string TILE_ENTITIES = "TileEntities";
-const std::string LAST_UPDATE ="LastUpdate";
-const std::string X_POS = "xPos";
-const std::string Z_POS = "zPos";
-const std::string TERRAIN_POPULATED = "TerrainPopulated";
 
+using namespace minecraftpp;
 
 ChunkData::ChunkData(RegionData* parent) : gzipData(NULL), sectorCount(0),length(0),compressionType(0),modified(false), parentInterface(NULL),parent(parent),chunkFile(NULL){
 

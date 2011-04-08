@@ -7,6 +7,8 @@
 #include "util.h"
 #include "region_data.h"
 
+namespace minecraftpp {
+
 RegionData::RegionData(std::string filename) : regionFile(filename.c_str()) {
 	//parse filename to get X and Y
 	size_t start = filename.find("r.");
@@ -92,4 +94,5 @@ void RegionData::freeze() {
 		}
 }
 
+}
 

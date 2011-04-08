@@ -7,9 +7,7 @@
 #include "ref_count.h"
 #include "chunk.h"
 #include "chunk_data.h"
-
-const uint8_t REGIONX = 32;
-const uint8_t REGIONZ = 32;
+namespace minecraftpp {
 
 class RegionData : public Countee {
 	private:
@@ -36,4 +34,5 @@ class RegionData : public Countee {
 		bool chunkLoaded(uint8_t xPos,uint8_t zPos);
 		~RegionData();
 };
+}
 #endif

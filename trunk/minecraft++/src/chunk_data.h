@@ -6,6 +6,7 @@
 #include "ref_count.h"
 #include "nbt.h"
 
+namespace minecraftpp {
 class RegionData;
 class RegionInterface;
 
@@ -56,4 +57,5 @@ class ChunkData : public Countee {
 		~ChunkData();
 		
 };
+}
 #endif

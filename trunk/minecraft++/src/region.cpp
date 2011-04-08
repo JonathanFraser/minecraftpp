@@ -5,6 +5,7 @@
 #include "util.h"
 #include <algorithm>
 
+namespace minecraftpp {
 
 RegionInterface::RegionInterface(RegionData* pointer) : Counter(pointer) , pointer(pointer){
 }
@@ -32,4 +33,5 @@ bool RegionInterface::chunkInFile(uint8_t xPos,uint8_t zPos) const {
 
 bool RegionInterface::chunkLoaded(uint8_t xPos,uint8_t zPos) {
 	return pointer->chunkLoaded(xPos,zPos);
+}
 }
