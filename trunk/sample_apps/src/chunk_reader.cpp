@@ -1,4 +1,4 @@
-#include "region_interface.h"
+#include "region.h"
 #include "world.h"
 
 #include <pqxx/pqxx>
@@ -11,6 +11,8 @@
 #include <map>
 #include <vector>
 
+const unsigned int REGIONX = 32;
+const unsigned int REGIONZ = 32;
 
 struct location {
 	int64_t x;
