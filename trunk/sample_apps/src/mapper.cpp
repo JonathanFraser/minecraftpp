@@ -3,10 +3,11 @@
 #include <sstream>
 #include <iostream>
 
+
 uint8_t ID;
 typedef png::rgb_pixel pixel;
 typedef png::image<pixel> PNG;
-
+namespace colours {
 const pixel BLUE = pixel(0,0,255);
 const pixel RED = pixel(255,0,0);
 const pixel GREEN = pixel(0,255,0);
@@ -26,8 +27,10 @@ const pixel BRONZE = pixel(205,127,50);
 const pixel GHOST_WHITE = pixel(248,248,255);
 const pixel CANDY_APPLE_RED = pixel(255,8,0);
 const pixel OFFICE_GREEN = pixel(0,128,0);
+}
 
-pixel getColour(BlockType block) {
+pixel getColour(minecraftpp::BlockType block) {
+	using namespace minecraftpp;	
 	if(block == ID)
 		return pixel(255,0,0);
 	
@@ -44,36 +47,36 @@ switch(block) {
 	case BLOCK_BURNING_FURNACE:
 	case BLOCK_STONE_PRESSURE_PLATE:
 	case BLOCK_CLAY_BLOCK:
-		return CADET_GRAY;
+		return colours::CADET_GRAY;
 	
 	//Grass
 	case BLOCK_GRASS:
-		return KELLY_GREEN;
+		return colours::KELLY_GREEN;
 
 	//Dirt	
 	case BLOCK_DIRT:
 	case BLOCK_FARMLAND:
-		return RUSSET;
+		return colours::RUSSET;
 
 	//Water
 	case BLOCK_WATER:
 	case BLOCK_STATIONARY_WATER:
-		return EGYPTIAN_BLUE; 
+		return colours::EGYPTIAN_BLUE; 
 
 	//Lava and brimstone
 	case BLOCK_LAVA:
 	case BLOCK_STATIONARY_LAVA:
 	case BLOCK_FIRE:
-		return FLAME;
+		return colours::FLAME;
 
 	//Sandy stuff
 	case BLOCK_SANDSTONE:
 	case BLOCK_SAND:
-		return BUFF;
+		return colours::BUFF;
 
 	//gravels
 	case BLOCK_GRAVEL:
-		return TYRIAN_PURPLE;	
+		return colours::TYRIAN_PURPLE;	
 		
 
 	//Ores
@@ -84,7 +87,7 @@ switch(block) {
 	case BLOCK_DIAMOND_ORE:
 	case BLOCK_REDSTONE_ORE:
 	case BLOCK_GLOWING_REDSTONE_ORE:
-		return CHARCOAL;
+		return colours::CHARCOAL;
 		
 	
 	case BLOCK_CRAFTING_TABLE:
@@ -99,14 +102,14 @@ switch(block) {
 	case BLOCK_JUKEBOX:
 	case BLOCK_FENCE:
 	case BLOCK_WALL_SIGN:
-		return BRONZE;
+		return colours::BRONZE;
 	
 	
 	//Forestry
 	case BLOCK_SAPLING:
 	case BLOCK_WOOD:
 	case BLOCK_LEAVES:
-		return FOREST_GREEN;
+		return colours::FOREST_GREEN;
 
 
 	//Misc Manmade stuff
@@ -118,12 +121,12 @@ switch(block) {
 	case BLOCK_DIAMOND_BLOCK:
 	case BLOCK_TNT:
 	case BLOCK_BOOKSHELF:
-		return BLACK;
+		return colours::BLACK;
 	
 	//The soft and fluffy
 	case BLOCK_BED:
 	case BLOCK_WOOL:
-		return WHITE;
+		return colours::WHITE;
 	
 	//Gardeners Delight
 	case BLOCK_CACTUS:
@@ -133,7 +136,7 @@ switch(block) {
 	case BLOCK_ROSE:
 	case BLOCK_BROWN_MUSHROOM:
 	case BLOCK_RED_MUSHROOM:
-		return OFFICE_GREEN;
+		return colours::OFFICE_GREEN;
 	
 	//Redstone stuff
 	case BLOCK_REDSTONE_WIRE:
@@ -141,17 +144,17 @@ switch(block) {
 	case BLOCK_REDSTONE_TORCH_ON:
 	case BLOCK_REDSTONE_REPEATER_OFF:
 	case BLOCK_REDSTONE_REPEATER_ON:
-		return CANDY_APPLE_RED;	
+		return colours::CANDY_APPLE_RED;	
 
 	//Snowy Stuff	
 	case BLOCK_SNOW:
 	case BLOCK_SNOW_BLOCK:
-		return GHOST_WHITE;
+		return colours::GHOST_WHITE;
 	
 	
 	//Ice
 	case BLOCK_ICE:
-		return ICEBERG;	
+		return colours::ICEBERG;	
 
 	//MISC Group
 	case BLOCK_SPONGE:
@@ -172,13 +175,14 @@ switch(block) {
 	case BLOCK_JACKOLANTERN:
 	case BLOCK_CAKE:
 	default:
-		return BLACK;
+		return colours::BLACK;
 }
 }	
 
-BlockType getMaximum(BlockType old_block,BlockType new_block) {
+minecraftpp::BlockType getMaximum(minecraftpp::BlockType old_block,minecraftpp::BlockType new_block) {
+	using namespace minecraftpp;
 	if(new_block == ID || old_block == ID)
-		return static_cast<BlockType>(ID);
+		return static_cast<minecraftpp::BlockType>(ID);
 	
 	if(new_block == BLOCK_SNOW && old_block == BLOCK_LEAVES)
 		return old_block;
@@ -191,12 +195,12 @@ BlockType getMaximum(BlockType old_block,BlockType new_block) {
 	return new_block; 
 }
 
-void scanChunk(PNG* image,unsigned int xoffset,unsigned int zoffset, ChunkInterface chunk) {
+void scanChunk(PNG* image,unsigned int xoffset,unsigned int zoffset, minecraftpp::ChunkInterface chunk) {
 	for(unsigned int x=0;x<16;x++)
 		for(unsigned int z=0;z<16;z++) {
 			unsigned int xvar = xoffset + x;
 			unsigned int zvar = zoffset + (15-z);
-			BlockType temp = BLOCK_BEDROCK;
+			minecraftpp::BlockType temp = minecraftpp::BLOCK_BEDROCK;
 			for(unsigned int y=0;y<128;y++) {
 				temp = getMaximum(temp,chunk.getBlock(x,y,z));
 			}
@@ -205,7 +209,7 @@ void scanChunk(PNG* image,unsigned int xoffset,unsigned int zoffset, ChunkInterf
 	return;
 }
 
-void scanRegion(PNG* image,unsigned int xoffset,unsigned int zoffset, RegionInterface region) {
+void scanRegion(PNG* image,unsigned int xoffset,unsigned int zoffset, minecraftpp::RegionInterface region) {
 	for(unsigned int x=0;x<32;x++) {
 		for(unsigned int z=0;z<32;z++) {
 			if(region.chunkInFile(x,z)) {
@@ -216,7 +220,7 @@ void scanRegion(PNG* image,unsigned int xoffset,unsigned int zoffset, RegionInte
 	return;
 }
 
-std::ostream & operator<<(std::ostream & stream,Coord &x) {
+std::ostream & operator<<(std::ostream & stream,minecraftpp::Coord &x) {
 	stream << "(" << x.first << "," << x.second << ")";
 	return stream;
 }
@@ -233,9 +237,9 @@ int main(int argc,char *argv[]) {
 	stream.str(blockid);
 	stream >> dataval;
 	ID = dataval;
-	World map(worlddir);
-	Coord tL = map.getTopLeft();
-	Coord bR = map.getBottomRight();
+	minecraftpp::World map(worlddir);
+	minecraftpp::Coord tL = map.getTopLeft();
+	minecraftpp::Coord bR = map.getBottomRight();
 	unsigned int width = tL.second - bR.second+1; 
 	unsigned int height = bR.first - tL.first+1;  
 //	std::cout << "Width: " << width << std::endl;

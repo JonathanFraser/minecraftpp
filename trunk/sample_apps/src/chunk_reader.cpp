@@ -11,8 +11,7 @@
 #include <map>
 #include <vector>
 
-const unsigned int REGIONX = 32;
-const unsigned int REGIONZ = 32;
+using namespace minecraftpp;
 
 struct location {
 	int64_t x;
