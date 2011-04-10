@@ -136,3 +136,86 @@ void World::printCoords() {
 		std::cout << "(" << i->first << "," << i->second << ")" << std::endl;
 	}
 }
+
+World::iterator World::begin() {
+	return iterator(this);
+}
+
+World::iterator World::end() {
+	return iterator(this).end();
+}
+
+World::iterator::iterator(World* pointer) : worldPointer(pointer),region(pointer->regions.begin()),chunkX(0),chunkZ(0){
+}
+
+World::iterator& World::iterator::end() {
+	region = worldPointer->regions.end();
+	chunkX=0;
+	chunkZ=0;
+	return *this;
+}
+
+bool World::iterator::operator==(const iterator &temp) const {
+	return (temp.region == region) && (chunkX == temp.chunkX) && (chunkZ == temp.chunkZ);
+}
+
+bool World::iterator::operator!=(const iterator &temp) const {
+	return !(*this == temp);
+}
+
+Chunk World::iterator::operator*() {
+	return region->second->getChunk(chunkX,chunkZ);
+}
+
+void World::iterator::addOne() {
+	if(++chunkX == 32) {
+		chunkX = 0;
+		if(++chunkZ == 32) {
+			chunkZ = 0;
+			region++;
+		}
+	}
+}
+
+void World::iterator::subOne() {
+	if(chunkX-- == 0) {
+		chunkX = 31;
+		if(chunkZ-- == 0) {
+			chunkZ = 31;
+			region--;
+		}
+	}
+}
+
+World::iterator& World::iterator::operator++() {
+	if(*this == worldPointer->end())
+			return *this;
+
+	do {
+		addOne();
+	} while (!(region->second->chunkInFile(chunkX,chunkZ)) && *this != worldPointer->end() );
+	return *this;
+}
+
+World::iterator& World::iterator::operator--() {
+	if(*this == worldPointer->begin())
+		return *this;
+
+	do {
+		subOne();
+	} while (!(region->second->chunkInFile(chunkX,chunkZ)) && *this != worldPointer->begin() );
+	return *this;
+
+}
+
+World::iterator World::iterator::operator++(int) {
+	iterator temp = *this;
+	++(*this);
+	return temp;
+}
+
+World::iterator World::iterator::operator--(int) {
+	iterator temp = *this;
+	--(*this);
+	return temp;
+}

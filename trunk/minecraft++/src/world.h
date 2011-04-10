@@ -28,6 +28,34 @@ class World {
 		void buildCoordList(const Coord&,CoordVector &,const std::string&);
 		nbtFile* readCompressedNBT(const std::string &filename);
 	public:
+		class iterator {
+			private:
+				World* worldPointer;
+				RegionMap::iterator region;
+				uint8_t chunkX;
+				uint8_t chunkZ;
+				void addOne();
+				void subOne();
+			public:
+				iterator(World*);
+				//set iterator to end
+				iterator& end();
+				//equal
+				bool operator==(const iterator &) const;
+				//not-equal
+				bool operator!=(const iterator &) const;
+				//pre-increment
+				iterator & operator++();
+				//post-increament
+				iterator operator++(int);
+				//pre-decrement 
+				iterator & operator--();
+				//post-decrement
+				iterator operator--(int);
+				//dereference
+				Chunk operator*();
+		};
+
 		World(const std::string& );
 		~World();
 		void printCoords();
@@ -39,6 +67,8 @@ class World {
 		Coord getBottomRight();
 		Region getRegion(int32_t x,int32_t z);
 		unsigned int regionCount() const;
+		iterator begin();
+		iterator end();
 };
 }
 #endif
