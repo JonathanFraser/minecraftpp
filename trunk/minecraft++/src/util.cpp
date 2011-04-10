@@ -4,7 +4,7 @@ int16_t arrayToShort(uint8_t *&data) {
 	uint16_t retval=0;
 	for(uint8_t i=0;i<2;i++) {
 		uint16_t datavel = *data++;
-		retval |= (datavel << (1-i)*8);
+		retval |= static_cast<uint16_t>(datavel << (1-i)*8);
 	}
 	return retval;
 }
@@ -59,7 +59,7 @@ double arrayToDouble(uint8_t *&data) {
 }
 
 unsigned int stringToArray(uint8_t *&data,const std::string &text) {
-	uint16_t size = text.size();
+	uint16_t size = static_cast<uint16_t>(text.size());
 	shortToArray(data,size);
 	for(uint16_t i=0;i<size;i++) {
 	 *data++ = text[i];
@@ -69,19 +69,19 @@ unsigned int stringToArray(uint8_t *&data,const std::string &text) {
 
 void shortToArray(uint8_t *&data,int16_t value) {
 	for(uint8_t i=0;i<2;i++) {
-		*data++ = (value >> (1-i)*8) & 0x00FF; 
+		*data++ = static_cast<uint8_t>((value >> (1-i)*8) & 0x00FF); 
 	}
 }
 
 void intToArray(uint8_t *&data, int32_t value) {
 	for(uint8_t i=0;i<4;i++) {
-		*data++ = (value >> (3-i)*8) & 0x000000FF; 		
+		*data++ = static_cast<uint8_t>((value >> (3-i)*8) & 0x000000FF); 		
 	}
 }
 
 void longToArray(uint8_t *&data, int64_t value) {
 	for(uint8_t i=0;i<8;i++) {
-		*data++ = (value >> (7-i)*8) & 0x00000000000000FF; 
+		*data++ = static_cast<uint8_t>((value >> (7-i)*8) & 0x00000000000000FF); 
 	}	
 }
 

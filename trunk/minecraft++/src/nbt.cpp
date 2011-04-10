@@ -147,7 +147,7 @@ TagByteArray::TagByteArray(uint8_t *&data) :Tag(TAG_ByteArray) {
 
 size_t TagByteArray::write(uint8_t *&data,size_t size) {
 	assert(size >= this->size + 4);
-	intToArray(data,size);
+	intToArray(data,static_cast<int32_t>(size));
 	for(uint32_t i=0;i<size;i++) {
 		*data++ = this->data[i];
 	}
@@ -157,7 +157,7 @@ size_t TagByteArray::write(uint8_t *&data,size_t size) {
 
 void TagByteArray::print(std::ostream &output, unsigned int level) {
 	printTabs(output,level);
-	output << "Byte Array: [" << (int) size << " bytes]" << std::endl;
+	output << "Byte Array: [" << static_cast<int>(size) << " bytes]" << std::endl;
 }
 
 TagByteArray::~TagByteArray() {
@@ -194,7 +194,7 @@ size_t TagList::write(uint8_t *&data,size_t size) {
 	size_t count = 1;
 	assert(size >= 5);
 	*data++ = listType;
-	intToArray(data,tags.size());
+	intToArray(data,static_cast<int32_t>(tags.size()));
 	count += 4;
 	for(uint32_t i = 0;i<tags.size();i++) {
 		count += tags[i]->write(data,size-count);

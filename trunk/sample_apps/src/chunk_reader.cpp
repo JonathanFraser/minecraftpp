@@ -1,5 +1,4 @@
-#include "region.h"
-#include "world.h"
+#include "minecraftpp.h"
 
 #include <pqxx/pqxx>
  
@@ -19,23 +18,23 @@ struct location {
 	uint8_t y;
 };
 
-const uint8_t trackedblocks[] = {
-	BLOCK_GOLD_ORE,
-	BLOCK_IRON_ORE,
-	BLOCK_COAL_ORE,
-	BLOCK_LAPIS_ORE,
-	BLOCK_YELLOW_FLOWER,
-	BLOCK_ROSE,
-	BLOCK_BROWN_MUSHROOM,
-	BLOCK_RED_MUSHROOM, /* 40 */
-	BLOCK_MOSSY_COBBLESTONE,
-	BLOCK_OBSIDIAN,
-	BLOCK_SPAWNER,
-	BLOCK_DIAMOND_ORE,
-	BLOCK_REDSTONE_ORE,
-	BLOCK_GLOWING_REDSTONE_ORE,
-	BLOCK_CLAY_BLOCK,
-	BLOCK_PUMPKIN
+const BlockType trackedblocks[] = {
+	BlockType::GOLD_ORE,
+	BlockType::IRON_ORE,
+	BlockType::COAL_ORE,
+	BlockType::LAPIS_ORE,
+	BlockType::YELLOW_FLOWER,
+	BlockType::ROSE,
+	BlockType::BROWN_MUSHROOM,
+	BlockType::RED_MUSHROOM, /* 40 */
+	BlockType::MOSSY_COBBLESTONE,
+	BlockType::OBSIDIAN,
+	BlockType::SPAWNER,
+	BlockType::DIAMOND_ORE,
+	BlockType::REDSTONE_ORE,
+	BlockType::GLOWING_REDSTONE_ORE,
+	BlockType::CLAY_BLOCK,
+	BlockType::PUMPKIN
 };
 
 const uint32_t ABOVE = 1<<0;
@@ -100,27 +99,27 @@ int main(void) {
 	
 	memset(tracked,0,sizeof(tracked));
 	for(uint8_t i=0;i<sizeof(trackedblocks);i++) {
-		tracked[trackedblocks[i]]=true;
+		tracked[static_cast<uint8_t>(trackedblocks[i])]=true;
 	}
 
 	for(int32_t regionX=tR.first;regionX<bL.first;regionX++)
 		for(int32_t regionZ=tR.second;regionZ<bL.second;regionZ++) {
 			if(B.regionInDir(regionX,regionZ)) {
 				const RegionInterface &A = B.getRegion(regionX,regionZ);
-				for(int chunkZ=0;chunkZ<REGIONZ;chunkZ++)
-					for(int chunkX=0;chunkX<REGIONX;chunkX++) {
+				for(uint8_t chunkZ=0;chunkZ<REGIONZ;chunkZ++)
+					for(uint8_t chunkX=0;chunkX<REGIONX;chunkX++) {
 						if(A.chunkInFile(chunkX,chunkZ)) {
 						const ChunkInterface &temp = A.getChunk(chunkX,chunkZ);
 						bool visited[16][128][16];
 						memset(visited,0,sizeof(visited));
-						for(int z=0;z<CHUNKZ;z++)
-							for(int x=0;x<CHUNKX;x++) {
+						for(uint8_t z=0;z<CHUNKZ;z++)
+							for(uint8_t x=0;x<CHUNKX;x++) {
 								int32_t xloc = regionX*32*16 + chunkX*16 + x;
 								int32_t zloc = regionZ*32*16 + chunkZ*16 + z;
 								for(uint8_t y=0;y<128;y++) {
 									if(!visited[x][y][z]) {
 										visited[x][y][z] = true;
-										uint8_t block = temp.getBlock(x,y,z);
+										uint8_t block = static_cast<uint8_t>(temp.getBlock(x,y,z));
 										if(tracked[block]) {											
 										}
 									}

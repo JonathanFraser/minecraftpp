@@ -8,7 +8,7 @@
 #include <iostream>
 #include <cassert>
 
-const char REGION_DIR[] = "/region/";
+const char REGION_DIR[] = "region/";
 const char FILE_PREFIX[] = "r.";
 const char FILE_SUFFIX[] = ".mcr";
 const char SEPARATOR[] = ".";
@@ -17,8 +17,11 @@ using namespace minecraftpp;
 
 World::World(const std::string &worldfolder): topLeft(Coord(0,0)),bottomRight(Coord(0,0)),dirName(worldfolder) {
 	CoordVector temp;
-	buildCoordList(Coord(0,0),temp,worldfolder);
-	levelFile = readCompressedNBT(worldfolder+"/level.dat");
+	if(dirName[dirName.size()] != '/') {
+		dirName = dirName + '/';
+	}
+	buildCoordList(Coord(0,0),temp,dirName);
+	levelFile = readCompressedNBT(dirName+"level.dat");
 }
 
 World::~World() {
@@ -71,7 +74,7 @@ void World::buildCoordList(const Coord &test,CoordVector &tested,const std::stri
 
 nbtFile* World::readCompressedNBT(const std::string &filename) {
 	gzFile gzfile = gzopen(filename.c_str(),"rb");
-	size_t datalength = MEGABYTE;
+	unsigned int datalength = MEGABYTE;
 	uint8_t *data = new uint8_t[datalength];
 	uint8_t *holder = data;
 	size_t readval = gzread(gzfile,holder,datalength);
@@ -125,7 +128,7 @@ RegionInterface World::getRegion(int32_t x,int32_t z) {
 }
 
 unsigned int World::regionCount() const {
-	return coords.size();
+	return static_cast<unsigned int> (coords.size());
 }
 
 void World::printCoords() {

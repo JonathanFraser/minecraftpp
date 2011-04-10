@@ -49,9 +49,9 @@ void ChunkData::thaw() {
 		chunkFile = new nbtFile();
 		TagCompound* newchunk = new TagCompound();
 		newchunk->insertSubTag(BLOCKS,new TagByteArray(32768));
-		newchunk->insertSubTag(BLOCK_DATA,new TagByteArray(16384));
+		newchunk->insertSubTag(DATA,new TagByteArray(16384));
 		newchunk->insertSubTag(SKY_LIGHT,new TagByteArray(16384));
-		newchunk->insertSubTag(BLOCK_LIGHT,new TagByteArray(16384));
+		newchunk->insertSubTag(LIGHT,new TagByteArray(16384));
 		newchunk->insertSubTag(HEIGHT_MAP,new TagByteArray(256));
 		newchunk->insertSubTag(ENTITIES,new TagList());
 		newchunk->insertSubTag(TILE_ENTITIES,new TagList());
@@ -95,7 +95,7 @@ void ChunkData::freeze() {
 		compress(gzipData+5,&destsize,rawData,datasize);
 		delete rawData;
 		uint8_t* temp = gzipData;
-		intToArray(temp,destsize);
+		intToArray(temp,static_cast<int32_t>(destsize));
 		*temp++=1;
 		destsize = destsize+5;
 		sectorCount = destsize/SECTOR_SIZE + (destsize%SECTOR_SIZE)?1:0;

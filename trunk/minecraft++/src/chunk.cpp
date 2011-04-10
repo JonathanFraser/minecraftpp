@@ -48,13 +48,13 @@ BlockType ChunkInterface::getBlock(uint8_t xPos,uint8_t yPos,uint8_t zPos) const
 
 void ChunkInterface::setBlock(uint8_t xPos,uint8_t yPos,uint8_t zPos,BlockType input) {
 	modified();
-	blockPointer[xPos][zPos][yPos] = input;
+	blockPointer[xPos][zPos][yPos] = static_cast<uint8_t>(input);
 }
 
 uint8_t ChunkInterface::getBlockData(uint8_t xPos,uint8_t yPos,uint8_t zPos) const {
-	TagByteArray* blockdataarraytag = dynamic_cast<TagByteArray*>(chunkPointer->getTag(BLOCK_DATA));
+	TagByteArray* blockdataarraytag = dynamic_cast<TagByteArray*>(chunkPointer->getTag(DATA));
 	unsigned int index = xPos*CHUNKZ*CHUNKY + yPos + zPos*CHUNKY;
 	uint8_t blockdata = blockdataarraytag->data[index>>1];
-	return ((index%2)?(blockdata>>4):(blockdata))&0x0F;	
+	return static_cast<uint8_t>(((index%2)?(blockdata>>4):(blockdata))&0x0F);	
 }
 		

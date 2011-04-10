@@ -20,7 +20,7 @@ world: $(TARGETS)
 #
 # Prevent echoing of compilation commands.
 #
-#.SILENT :
+.SILENT :
 
 #
 # Rule to build the documentation.
@@ -29,14 +29,18 @@ world: $(TARGETS)
 doc :
 	doxygen
 
+.PHONY: minecraftpp
+minecraftpp:
+		$(MAKE) -C ../minecraft++
+
 #
 # Rule to link a final executable.
 #
 # $$(addprefix build/,$$(subst .cpp,.o,$$(shell find $$(SOURCES_%) -name .svn -prune -o -name '*.cpp' -print) ))
 #
-$(TARGETS) :%: build/src/%.o	
+$(TARGETS) :%: build/src/%.o minecraftpp
 	echo "  LD	$@"
-	$(CXX) $(LDFLAGS) -o$@ $+ $(LIBS)
+	$(CXX) $(LDFLAGS) -o$@ $<  $(LIBS)
 
 #
 # Rule to make a .d file from a .cpp file.

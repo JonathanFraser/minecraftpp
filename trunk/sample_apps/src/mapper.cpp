@@ -1,13 +1,15 @@
-#include "world.h"
+#include "minecraftpp.h"
 #include <png++/png.hpp>
 #include <sstream>
 #include <iostream>
 
+using namespace minecraftpp;
 
-uint8_t ID;
+BlockType ID;
+
 typedef png::rgb_pixel pixel;
 typedef png::image<pixel> PNG;
-namespace colours {
+
 const pixel BLUE = pixel(0,0,255);
 const pixel RED = pixel(255,0,0);
 const pixel GREEN = pixel(0,255,0);
@@ -27,167 +29,166 @@ const pixel BRONZE = pixel(205,127,50);
 const pixel GHOST_WHITE = pixel(248,248,255);
 const pixel CANDY_APPLE_RED = pixel(255,8,0);
 const pixel OFFICE_GREEN = pixel(0,128,0);
-}
 
-pixel getColour(minecraftpp::BlockType block) {
-	using namespace minecraftpp;	
+
+pixel getColour(BlockType block) {	
 	if(block == ID)
 		return pixel(255,0,0);
 	
 switch(block) {
 	
 	//Stoney stuff
-	case BLOCK_STONE:
-	case BLOCK_COBBLESTONE:
-	case BLOCK_COBBLESTONE_STAIRS:
-	case BLOCK_DISPENSER:
-	case BLOCK_DOUBLE_SLAB:
-	case BLOCK_SLAB:
-	case BLOCK_FURNACE:
-	case BLOCK_BURNING_FURNACE:
-	case BLOCK_STONE_PRESSURE_PLATE:
-	case BLOCK_CLAY_BLOCK:
-		return colours::CADET_GRAY;
+	case BlockType::STONE:
+	case BlockType::COBBLESTONE:
+	case BlockType::COBBLESTONE_STAIRS:
+	case BlockType::DISPENSER:
+	case BlockType::DOUBLE_SLAB:
+	case BlockType::SLAB:
+	case BlockType::FURNACE:
+	case BlockType::BURNING_FURNACE:
+	case BlockType::STONE_PRESSURE_PLATE:
+	case BlockType::CLAY_BLOCK:
+		return CADET_GRAY;
 	
 	//Grass
-	case BLOCK_GRASS:
-		return colours::KELLY_GREEN;
+	case BlockType::GRASS:
+		return KELLY_GREEN;
 
 	//Dirt	
-	case BLOCK_DIRT:
-	case BLOCK_FARMLAND:
-		return colours::RUSSET;
+	case BlockType::DIRT:
+	case BlockType::FARMLAND:
+		return RUSSET;
 
 	//Water
-	case BLOCK_WATER:
-	case BLOCK_STATIONARY_WATER:
-		return colours::EGYPTIAN_BLUE; 
+	case BlockType::WATER:
+	case BlockType::STATIONARY_WATER:
+		return EGYPTIAN_BLUE; 
 
 	//Lava and brimstone
-	case BLOCK_LAVA:
-	case BLOCK_STATIONARY_LAVA:
-	case BLOCK_FIRE:
-		return colours::FLAME;
+	case BlockType::LAVA:
+	case BlockType::STATIONARY_LAVA:
+	case BlockType::FIRE:
+		return FLAME;
 
 	//Sandy stuff
-	case BLOCK_SANDSTONE:
-	case BLOCK_SAND:
-		return colours::BUFF;
+	case BlockType::SANDSTONE:
+	case BlockType::SAND:
+		return BUFF;
 
 	//gravels
-	case BLOCK_GRAVEL:
-		return colours::TYRIAN_PURPLE;	
+	case BlockType::GRAVEL:
+		return TYRIAN_PURPLE;	
 		
 
 	//Ores
-	case BLOCK_GOLD_ORE:
-	case BLOCK_IRON_ORE:
-	case BLOCK_COAL_ORE:
-	case BLOCK_LAPIS_ORE:
-	case BLOCK_DIAMOND_ORE:
-	case BLOCK_REDSTONE_ORE:
-	case BLOCK_GLOWING_REDSTONE_ORE:
-		return colours::CHARCOAL;
+	case BlockType::GOLD_ORE:
+	case BlockType::IRON_ORE:
+	case BlockType::COAL_ORE:
+	case BlockType::LAPIS_ORE:
+	case BlockType::DIAMOND_ORE:
+	case BlockType::REDSTONE_ORE:
+	case BlockType::GLOWING_REDSTONE_ORE:
+		return CHARCOAL;
 		
 	
-	case BLOCK_CRAFTING_TABLE:
-	case BLOCK_PLANK:
-	case BLOCK_WOODEN_STAIRS:
-	case BLOCK_WOODEN_DOOR:
-	case BLOCK_SIGN_POST:
-	case BLOCK_LADDER:
-	case BLOCK_NOTE_BLOCK:
-	case BLOCK_CHEST:
-	case BLOCK_WOODEN_PRESSURE_PLATE:
-	case BLOCK_JUKEBOX:
-	case BLOCK_FENCE:
-	case BLOCK_WALL_SIGN:
-		return colours::BRONZE;
+	case BlockType::CRAFTING_TABLE:
+	case BlockType::PLANK:
+	case BlockType::WOODEN_STAIRS:
+	case BlockType::WOODEN_DOOR:
+	case BlockType::SIGN_POST:
+	case BlockType::LADDER:
+	case BlockType::NOTE_BLOCK:
+	case BlockType::CHEST:
+	case BlockType::WOODEN_PRESSURE_PLATE:
+	case BlockType::JUKEBOX:
+	case BlockType::FENCE:
+	case BlockType::WALL_SIGN:
+		return BRONZE;
 	
 	
 	//Forestry
-	case BLOCK_SAPLING:
-	case BLOCK_WOOD:
-	case BLOCK_LEAVES:
-		return colours::FOREST_GREEN;
+	case BlockType::SAPLING:
+	case BlockType::WOOD:
+	case BlockType::LEAVES:
+		return FOREST_GREEN;
 
 
 	//Misc Manmade stuff
-	case BLOCK_GLASS:
-	case BLOCK_LAPIS_BLOCK:
-	case BLOCK_GOLD_BLOCK:
-	case BLOCK_IRON_BLOCK:
-	case BLOCK_BRICK_BLOCK:
-	case BLOCK_DIAMOND_BLOCK:
-	case BLOCK_TNT:
-	case BLOCK_BOOKSHELF:
-		return colours::BLACK;
+	case BlockType::GLASS:
+	case BlockType::LAPIS_BLOCK:
+	case BlockType::GOLD_BLOCK:
+	case BlockType::IRON_BLOCK:
+	case BlockType::BRICK_BLOCK:
+	case BlockType::DIAMOND_BLOCK:
+	case BlockType::TNT:
+	case BlockType::BOOKSHELF:
+		return BLACK;
 	
 	//The soft and fluffy
-	case BLOCK_BED:
-	case BLOCK_WOOL:
-		return colours::WHITE;
+	case BlockType::BED:
+	case BlockType::WOOL:
+		return WHITE;
 	
 	//Gardeners Delight
-	case BLOCK_CACTUS:
-	case BLOCK_CROPS:
-	case BLOCK_SUGAR_CANE:
-	case BLOCK_YELLOW_FLOWER:
-	case BLOCK_ROSE:
-	case BLOCK_BROWN_MUSHROOM:
-	case BLOCK_RED_MUSHROOM:
-		return colours::OFFICE_GREEN;
+	case BlockType::CACTUS:
+	case BlockType::CROPS:
+	case BlockType::SUGAR_CANE:
+	case BlockType::YELLOW_FLOWER:
+	case BlockType::ROSE:
+	case BlockType::BROWN_MUSHROOM:
+	case BlockType::RED_MUSHROOM:
+		return OFFICE_GREEN;
 	
 	//Redstone stuff
-	case BLOCK_REDSTONE_WIRE:
-	case BLOCK_REDSTONE_TORCH_OFF:
-	case BLOCK_REDSTONE_TORCH_ON:
-	case BLOCK_REDSTONE_REPEATER_OFF:
-	case BLOCK_REDSTONE_REPEATER_ON:
-		return colours::CANDY_APPLE_RED;	
+	case BlockType::REDSTONE_WIRE:
+	case BlockType::REDSTONE_TORCH_OFF:
+	case BlockType::REDSTONE_TORCH_ON:
+	case BlockType::REDSTONE_REPEATER_OFF:
+	case BlockType::REDSTONE_REPEATER_ON:
+		return CANDY_APPLE_RED;	
 
 	//Snowy Stuff	
-	case BLOCK_SNOW:
-	case BLOCK_SNOW_BLOCK:
-		return colours::GHOST_WHITE;
+	case BlockType::SNOW:
+	case BlockType::SNOW_BLOCK:
+		return GHOST_WHITE;
 	
 	
 	//Ice
-	case BLOCK_ICE:
-		return colours::ICEBERG;	
+	case BlockType::ICE:
+		return ICEBERG;	
 
 	//MISC Group
-	case BLOCK_SPONGE:
-	case BLOCK_BEDROCK:
-	case BLOCK_MOSSY_COBBLESTONE:
-	case BLOCK_OBSIDIAN:
-	case BLOCK_TORCH: 
-	case BLOCK_SPAWNER:
-	case BLOCK_RAILS:
-	case BLOCK_LEVER:
-	case BLOCK_IRON_DOOR:
-	case BLOCK_STONE_BUTTON:
-	case BLOCK_PUMPKIN:
-	case BLOCK_NETHERRACK:
-	case BLOCK_SOUL_SAND:
-	case BLOCK_GLOWSTONE_BLOCK:
-	case BLOCK_PORTAL:
-	case BLOCK_JACKOLANTERN:
-	case BLOCK_CAKE:
+	case BlockType::SPONGE:
+	case BlockType::BEDROCK:
+	case BlockType::MOSSY_COBBLESTONE:
+	case BlockType::OBSIDIAN:
+	case BlockType::TORCH: 
+	case BlockType::SPAWNER:
+	case BlockType::RAILS:
+	case BlockType::LEVER:
+	case BlockType::IRON_DOOR:
+	case BlockType::STONE_BUTTON:
+	case BlockType::PUMPKIN:
+	case BlockType::NETHERRACK:
+	case BlockType::SOUL_SAND:
+	case BlockType::GLOWSTONE_BLOCK:
+	case BlockType::PORTAL:
+	case BlockType::JACKOLANTERN:
+	case BlockType::CAKE:
 	default:
-		return colours::BLACK;
+		return BLACK;
 }
 }	
 
 minecraftpp::BlockType getMaximum(minecraftpp::BlockType old_block,minecraftpp::BlockType new_block) {
-	using namespace minecraftpp;
+
 	if(new_block == ID || old_block == ID)
 		return static_cast<minecraftpp::BlockType>(ID);
 	
-	if(new_block == BLOCK_SNOW && old_block == BLOCK_LEAVES)
+	if(new_block == BlockType::SNOW && old_block == BlockType::LEAVES)
 		return old_block;
 		
-	if((new_block == BLOCK_AIR || new_block == BLOCK_GLASS) && old_block != BLOCK_AIR) {
+	if((new_block == BlockType::AIR || new_block == BlockType::GLASS) && old_block != BlockType::AIR) {
 
 		return old_block;
 	}
@@ -196,12 +197,12 @@ minecraftpp::BlockType getMaximum(minecraftpp::BlockType old_block,minecraftpp::
 }
 
 void scanChunk(PNG* image,unsigned int xoffset,unsigned int zoffset, minecraftpp::ChunkInterface chunk) {
-	for(unsigned int x=0;x<16;x++)
-		for(unsigned int z=0;z<16;z++) {
+	for(uint8_t x=0;x<16;x++)
+		for(uint8_t z=0;z<16;z++) {
 			unsigned int xvar = xoffset + x;
 			unsigned int zvar = zoffset + (15-z);
-			minecraftpp::BlockType temp = minecraftpp::BLOCK_BEDROCK;
-			for(unsigned int y=0;y<128;y++) {
+			BlockType temp = BlockType::BEDROCK;
+			for(uint8_t y=0;y<128;y++) {
 				temp = getMaximum(temp,chunk.getBlock(x,y,z));
 			}
 			(*image)[xvar][zvar] = getColour(temp);
@@ -210,8 +211,8 @@ void scanChunk(PNG* image,unsigned int xoffset,unsigned int zoffset, minecraftpp
 }
 
 void scanRegion(PNG* image,unsigned int xoffset,unsigned int zoffset, minecraftpp::RegionInterface region) {
-	for(unsigned int x=0;x<32;x++) {
-		for(unsigned int z=0;z<32;z++) {
+	for(uint8_t x=0;x<32;x++) {
+		for(uint8_t z=0;z<32;z++) {
 			if(region.chunkInFile(x,z)) {
 				scanChunk(image,xoffset+x*16,zoffset + (31-z)*16,region.getChunk(x,z));	
 			}
@@ -236,26 +237,26 @@ int main(int argc,char *argv[]) {
 	std::stringstream stream;
 	stream.str(blockid);
 	stream >> dataval;
-	ID = dataval;
-	minecraftpp::World map(worlddir);
-	minecraftpp::Coord tL = map.getTopLeft();
-	minecraftpp::Coord bR = map.getBottomRight();
+	ID = static_cast<BlockType>(dataval);
+	World map(worlddir);
+	Coord tL = map.getTopLeft();
+	Coord bR = map.getBottomRight();
 	unsigned int width = tL.second - bR.second+1; 
 	unsigned int height = bR.first - tL.first+1;  
 //	std::cout << "Width: " << width << std::endl;
 //	std::cout << "Height: " << height << std::endl;
 	PNG image(512*width,512*height);
-	for(long int x = tL.first;x<=bR.first;x++)
-		for(long int z = bR.second;z<=tL.second;z++){
-			unsigned int xoffset = (x-tL.first)*512;
-			unsigned int zoffset = (tL.second - z)*512;
+	for(int32_t x = tL.first;x<=bR.first;x++)
+		for(int32_t z = bR.second;z<=tL.second;z++){
+			int32_t xoffset = (x-tL.first)*512;
+			int32_t zoffset = (tL.second - z)*512;
 			if(map.regionInDir(x,z)) {
 				scanRegion(&image,xoffset,zoffset,map.getRegion(x,z));
 			}
 		}
 	std::stringstream png_name;
 	png_name << "BLOCKID_";
-	png_name << (int)ID;
+	png_name << static_cast<int>(ID);
 	png_name << ".png";
 	std::cout << png_name.str() << std::endl;
 	image.write(png_name.str().c_str());	
