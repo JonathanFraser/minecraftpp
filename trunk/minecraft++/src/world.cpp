@@ -74,6 +74,7 @@ void World::buildCoordList(const Coord &test,CoordVector &tested,const std::stri
 
 nbtFile* World::readCompressedNBT(const std::string &filename) {
 	gzFile gzfile = gzopen(filename.c_str(),"rb");
+	assert(gzfile);
 	unsigned int datalength = MEGABYTE;
 	uint8_t *data = new uint8_t[datalength];
 	uint8_t *holder = data;
@@ -145,11 +146,11 @@ World::iterator World::end() {
 	return iterator(this).end();
 }
 
-World::iterator::iterator(World* pointer) : worldPointer(pointer),region(pointer->regions.begin()),chunkX(0),chunkZ(0){
+World::iterator::iterator(World* pointer) : worldPointer(pointer),region(pointer->coords.begin()),chunkX(0),chunkZ(0) {
 }
 
 World::iterator& World::iterator::end() {
-	region = worldPointer->regions.end();
+	region = worldPointer->coords.end();
 	chunkX=0;
 	chunkZ=0;
 	return *this;
@@ -164,7 +165,7 @@ bool World::iterator::operator!=(const iterator &temp) const {
 }
 
 Chunk World::iterator::operator*() {
-	return region->second->getChunk(chunkX,chunkZ);
+	return worldPointer->getRegion(region->first,region->second).getChunk(chunkX,chunkZ);
 }
 
 void World::iterator::addOne() {
@@ -193,7 +194,7 @@ World::iterator& World::iterator::operator++() {
 
 	do {
 		addOne();
-	} while (!(region->second->chunkInFile(chunkX,chunkZ)) && *this != worldPointer->end() );
+	} while (!((worldPointer->regionInDir(region->first,region->second)) && (worldPointer->getRegion(region->first,region->second).chunkInFile(chunkX,chunkZ))) && *this != worldPointer->end() );
 	return *this;
 }
 
@@ -203,9 +204,8 @@ World::iterator& World::iterator::operator--() {
 
 	do {
 		subOne();
-	} while (!(region->second->chunkInFile(chunkX,chunkZ)) && *this != worldPointer->begin() );
+	} while (!((worldPointer->regionInDir(region->first,region->second)) && (worldPointer->getRegion(region->first,region->second).chunkInFile(chunkX,chunkZ))) && *this != worldPointer->begin() );
 	return *this;
-
 }
 
 World::iterator World::iterator::operator++(int) {
@@ -217,5 +217,13 @@ World::iterator World::iterator::operator++(int) {
 World::iterator World::iterator::operator--(int) {
 	iterator temp = *this;
 	--(*this);
+	return temp;
+}
+
+Coord World::iterator::getCoord() {
+	assert(*this != worldPointer->end());
+	Coord temp = *region;
+	temp.first = (32*temp.first + chunkX)*16;
+	temp.second = (32*temp.second + chunkZ)*16;
 	return temp;
 }

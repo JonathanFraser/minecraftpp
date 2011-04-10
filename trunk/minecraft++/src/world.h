@@ -31,7 +31,7 @@ class World {
 		class iterator {
 			private:
 				World* worldPointer;
-				RegionMap::iterator region;
+				CoordVector::iterator region;
 				uint8_t chunkX;
 				uint8_t chunkZ;
 				void addOne();
@@ -54,6 +54,8 @@ class World {
 				iterator operator--(int);
 				//dereference
 				Chunk operator*();
+				//get location
+				Coord getCoord();
 		};
 
 		World(const std::string& );

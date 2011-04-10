@@ -2,7 +2,7 @@
 #
 # Build a full CXXFLAGS, LDFLAGS, and LIBS.
 #
-TARGETS = NBT_test mapper chunk_reader
+TARGETS = NBT_test mapper chunk_reader IteratorTest
 
 override PACKAGES := zlib libpng
 
