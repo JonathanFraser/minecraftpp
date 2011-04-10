@@ -196,7 +196,7 @@ minecraftpp::BlockType getMaximum(minecraftpp::BlockType old_block,minecraftpp::
 	return new_block; 
 }
 
-void scanChunk(PNG* image,unsigned int xoffset,unsigned int zoffset, minecraftpp::ChunkInterface chunk) {
+void scanChunk(PNG* image,unsigned int xoffset,unsigned int zoffset, minecraftpp::Chunk chunk) {
 	for(uint8_t x=0;x<16;x++)
 		for(uint8_t z=0;z<16;z++) {
 			unsigned int xvar = xoffset + x;
@@ -210,7 +210,7 @@ void scanChunk(PNG* image,unsigned int xoffset,unsigned int zoffset, minecraftpp
 	return;
 }
 
-void scanRegion(PNG* image,unsigned int xoffset,unsigned int zoffset, minecraftpp::RegionInterface region) {
+void scanRegion(PNG* image,unsigned int xoffset,unsigned int zoffset, minecraftpp::Region region) {
 	for(uint8_t x=0;x<32;x++) {
 		for(uint8_t z=0;z<32;z++) {
 			if(region.chunkInFile(x,z)) {

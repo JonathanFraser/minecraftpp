@@ -79,7 +79,7 @@ clean : cleanbin cleandoc cleanobj
 
 .PHONY : cleanbin
 cleanbin :
-	$(RM) -rf bin
+	$(RM) -rf $(TARGETS)
 
 .PHONY : cleandep
 cleandep :

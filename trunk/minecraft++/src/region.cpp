@@ -7,31 +7,31 @@
 
 namespace minecraftpp {
 
-RegionInterface::RegionInterface(RegionData* pointer) : Counter(pointer) , pointer(pointer){
+Region::Region(RegionData* pointer) : Counter(pointer) , pointer(pointer){
 }
 
-RegionInterface::RegionInterface(const RegionInterface &B) : Counter(B.data) , pointer(B.pointer){
+Region::Region(const Region &B) : Counter(B.data) , pointer(B.pointer){
 }
 
-void RegionInterface::swap(RegionInterface &B) {
+void Region::swap(Region &B) {
 	Counter::swap(B);
 	std::swap(pointer,B.pointer);
 }
 
-RegionInterface& RegionInterface::operator=(RegionInterface B) {
+Region& Region::operator=(Region B) {
 	swap(B);
 	return *this;
 }
 
-ChunkInterface RegionInterface::getChunk(uint8_t xPos,uint8_t zPos) const {
+Chunk Region::getChunk(uint8_t xPos,uint8_t zPos) const {
 	return pointer->getChunk(xPos,zPos);
 }
 
-bool RegionInterface::chunkInFile(uint8_t xPos,uint8_t zPos) const {
+bool Region::chunkInFile(uint8_t xPos,uint8_t zPos) const {
 	return pointer->chunkInFile(xPos,zPos);
 }
 
-bool RegionInterface::chunkLoaded(uint8_t xPos,uint8_t zPos) {
+bool Region::chunkLoaded(uint8_t xPos,uint8_t zPos) {
 	return pointer->chunkLoaded(xPos,zPos);
 }
 }

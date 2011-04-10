@@ -13,45 +13,45 @@
 
 using namespace minecraftpp;
 
-ChunkInterface::ChunkInterface(ChunkData* pointer) : Counter(pointer) , chunkPointer(pointer) {
+Chunk::Chunk(ChunkData* pointer) : Counter(pointer) , chunkPointer(pointer) {
 	setupPointers();
 };
 
-ChunkInterface::ChunkInterface(const ChunkInterface &temp ) : Counter(temp) , chunkPointer(temp.chunkPointer) {
+Chunk::Chunk(const Chunk &temp ) : Counter(temp) , chunkPointer(temp.chunkPointer) {
 	setupPointers();
 }
 
-void ChunkInterface::setupPointers() {
+void Chunk::setupPointers() {
 	TagByteArray* blockarraytag = dynamic_cast<TagByteArray*>(chunkPointer->getTag(BLOCKS));	
 	blockPointer = reinterpret_cast<uint8_t (*)[CHUNKZ][CHUNKY]>(blockarraytag->data);	
 }
 
-void ChunkInterface::modified() {
+void Chunk::modified() {
 	free(chunkPointer->gzipData);
 	chunkPointer->gzipData = NULL;
 	chunkPointer->modified = true;
 }
 
-void ChunkInterface::swap(ChunkInterface &B) {
+void Chunk::swap(Chunk &B) {
 	std::swap(blockPointer,B.blockPointer);
 	std::swap(chunkPointer,B.chunkPointer);	
 }
 
-ChunkInterface& ChunkInterface::operator=(ChunkInterface B) {
+Chunk& Chunk::operator=(Chunk B) {
 	swap(B);
 	return *this;
 }
 
-BlockType ChunkInterface::getBlock(uint8_t xPos,uint8_t yPos,uint8_t zPos) const {
+BlockType Chunk::getBlock(uint8_t xPos,uint8_t yPos,uint8_t zPos) const {
 	return static_cast<BlockType>(blockPointer[xPos][zPos][yPos]);
 }
 
-void ChunkInterface::setBlock(uint8_t xPos,uint8_t yPos,uint8_t zPos,BlockType input) {
+void Chunk::setBlock(uint8_t xPos,uint8_t yPos,uint8_t zPos,BlockType input) {
 	modified();
 	blockPointer[xPos][zPos][yPos] = static_cast<uint8_t>(input);
 }
 
-uint8_t ChunkInterface::getBlockData(uint8_t xPos,uint8_t yPos,uint8_t zPos) const {
+uint8_t Chunk::getBlockData(uint8_t xPos,uint8_t yPos,uint8_t zPos) const {
 	TagByteArray* blockdataarraytag = dynamic_cast<TagByteArray*>(chunkPointer->getTag(DATA));
 	unsigned int index = xPos*CHUNKZ*CHUNKY + yPos + zPos*CHUNKY;
 	uint8_t blockdata = blockdataarraytag->data[index>>1];

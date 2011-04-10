@@ -105,11 +105,11 @@ int main(void) {
 	for(int32_t regionX=tR.first;regionX<bL.first;regionX++)
 		for(int32_t regionZ=tR.second;regionZ<bL.second;regionZ++) {
 			if(B.regionInDir(regionX,regionZ)) {
-				const RegionInterface &A = B.getRegion(regionX,regionZ);
+				const Region &A = B.getRegion(regionX,regionZ);
 				for(uint8_t chunkZ=0;chunkZ<REGIONZ;chunkZ++)
 					for(uint8_t chunkX=0;chunkX<REGIONX;chunkX++) {
 						if(A.chunkInFile(chunkX,chunkZ)) {
-						const ChunkInterface &temp = A.getChunk(chunkX,chunkZ);
+						const Chunk &temp = A.getChunk(chunkX,chunkZ);
 						bool visited[16][128][16];
 						memset(visited,0,sizeof(visited));
 						for(uint8_t z=0;z<CHUNKZ;z++)

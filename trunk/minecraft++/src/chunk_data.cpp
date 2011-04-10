@@ -81,7 +81,7 @@ void ChunkData::thaw() {
 		delete[] outputdata;	
 	}
 	assert(parentInterface == NULL);
-	parentInterface = new RegionInterface(parent);
+	parentInterface = new Region(parent);
 }
 
 void ChunkData::freeze() {

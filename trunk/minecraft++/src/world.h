@@ -37,7 +37,7 @@ class World {
 		Coord getTopRight();
 		Coord getBottomLeft();
 		Coord getBottomRight();
-		RegionInterface getRegion(int32_t x,int32_t z);
+		Region getRegion(int32_t x,int32_t z);
 		unsigned int regionCount() const;
 };
 }

@@ -1,5 +1,5 @@
-#ifndef __CHUNK_INTERFACE_H
-#define __CHUNK_INTERFACE_H
+#ifndef __CHUNK_H
+#define __CHUNK_H
 
 #include <stdint.h>
 #include "ref_count.h"
@@ -9,19 +9,19 @@
 namespace minecraftpp {
 
 class ChunkData;
-class ChunkInterface : public Counter {
+class Chunk : public Counter {
 	private:
 		friend class RegionData;
 		ChunkData* chunkPointer;
-		ChunkInterface(ChunkData* pointer);
+		Chunk(ChunkData* pointer);
 		uint8_t (*blockPointer)[CHUNKZ][CHUNKY];
 		void modified();
 		void setupPointers();
-		void swap( ChunkInterface &);
+		void swap( Chunk &);
 	public:
-		ChunkInterface& operator=(ChunkInterface);
+		Chunk& operator=(Chunk);
 
-		ChunkInterface(const ChunkInterface&);
+		Chunk(const Chunk&);
 		void setBlock(uint8_t xPos,uint8_t yPos,uint8_t zPos,BlockType block);	
 		BlockType getBlock(uint8_t xPos,uint8_t yPos,uint8_t zPos) const;
 		uint8_t getBlockData(uint8_t xPos,uint8_t yPos,uint8_t zPos) const;

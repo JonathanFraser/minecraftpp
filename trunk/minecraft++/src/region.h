@@ -1,5 +1,5 @@
-#ifndef __REGION_INTERFACE_H
-#define __REGION_INTERFACE_H
+#ifndef __REGION_H
+#define __REGION_H
 
 #include <stdint.h>
 #include <string>
@@ -11,17 +11,17 @@ namespace minecraftpp {
 
 class RegionData;
 
-class RegionInterface : public Counter {
+class Region : public Counter {
 	private:
 		friend class World;
 		friend class ChunkData;
 		RegionData* pointer;
-		RegionInterface(RegionData* pointer);
-		void swap(RegionInterface &);
+		Region(RegionData* pointer);
+		void swap(Region &);
 	public:
-		RegionInterface(const RegionInterface&);
-		RegionInterface & operator=(RegionInterface);
-		ChunkInterface getChunk(uint8_t xPos,uint8_t zPos) const;
+		Region(const Region&);
+		Region & operator=(Region);
+		Chunk getChunk(uint8_t xPos,uint8_t zPos) const;
 		bool chunkInFile(uint8_t xPos,uint8_t zPos) const ;
 		bool chunkLoaded(uint8_t xPos,uint8_t zPos);
 };

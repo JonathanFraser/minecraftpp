@@ -47,7 +47,7 @@ void RegionData::readRegionData() {
 
 
 
-ChunkInterface RegionData::getChunk(uint8_t xPos,uint8_t zPos) {
+Chunk RegionData::getChunk(uint8_t xPos,uint8_t zPos) {
 	assert(xPos<REGIONX);
 	assert(zPos<REGIONZ);
 	if( !chunkInFile(xPos,zPos) ) {
@@ -63,7 +63,7 @@ ChunkInterface RegionData::getChunk(uint8_t xPos,uint8_t zPos) {
 		regionFile.read(reinterpret_cast<char *>(data),SECTOR_SIZE*counts[zPos][xPos]);
 	}
 
-	return ChunkInterface(chunkTable[zPos][xPos]);
+	return Chunk(chunkTable[zPos][xPos]);
 }
 
 bool RegionData::chunkInFile(uint8_t xPos,uint8_t zPos) {

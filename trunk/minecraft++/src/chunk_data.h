@@ -8,7 +8,7 @@
 
 namespace minecraftpp {
 class RegionData;
-class RegionInterface;
+class Region;
 
 /**
 * @class ChunkData
@@ -28,12 +28,12 @@ class ChunkData : public Countee {
 		uint32_t length;
 		uint8_t compressionType;
 		bool modified;
-		RegionInterface* parentInterface;
+		Region* parentInterface;
 		RegionData* parent;
 		nbtFile* chunkFile;
 		ChunkData(const ChunkData&) = delete;
 		ChunkData& operator=(const ChunkData&) = delete;
-		friend class ChunkInterface;
+		friend class Chunk;
 		Tag* getTag(const std::string &);	
 	public:
 		ChunkData(RegionData *parent);

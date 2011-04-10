@@ -119,12 +119,12 @@ Coord World::getTopRight() {
 	return Coord(topLeft.first,bottomRight.second);
 }
 
-RegionInterface World::getRegion(int32_t x,int32_t z) {
+Region World::getRegion(int32_t x,int32_t z) {
 	assert(regionInDir(x,z));
 	if(!regionLoaded(x,z)) {
 		regions.insert(std::pair<Coord,RegionData*>(Coord(x,z),new RegionData(constructFilename(x,z))));	
 	}
-	return RegionInterface(regions[Coord(x,z)]);			
+	return Region(regions[Coord(x,z)]);			
 }
 
 unsigned int World::regionCount() const {

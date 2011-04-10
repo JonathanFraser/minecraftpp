@@ -29,7 +29,7 @@ class RegionData : public Countee {
 
 	public:
 		RegionData(std::string filename);
-		ChunkInterface getChunk(uint8_t xPos,uint8_t zPos);
+		Chunk getChunk(uint8_t xPos,uint8_t zPos);
 		bool chunkInFile(uint8_t xPos,uint8_t zPos);
 		bool chunkLoaded(uint8_t xPos,uint8_t zPos);
 		~RegionData();
