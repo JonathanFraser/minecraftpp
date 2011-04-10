@@ -9,7 +9,9 @@ override PACKAGES := zlib libpng
 override CXXFLAGS := -std=gnu++0x -Wall -Wextra -Wconversion -Wundef -Wold-style-cast -march=native -O3 -g -pthread $(CXXFLAGS)
 override CXXFLAGS := -I../minecraft++/src/ $(shell pkg-config --cflags $(PACKAGES) | sed 's/-I/-isystem /g') $(CXXFLAGS)
 override LDFLAGS := $(shell pkg-config --libs-only-other --libs-only-L $(PACKAGES)) $(LDFLAGS)
-override LIBS := $(shell pkg-config --libs-only-l $(PACKAGES)) ../minecraft++/bin/minecraftpp.a $(LIBS)
+override LIBS := $(shell pkg-config --libs-only-l $(PACKAGES)) $(LIBS)
+
+MCRAFT = ../minecraft++/bin/minecraftpp.a
 
 #
 # The target to build everything.
@@ -29,8 +31,8 @@ world: $(TARGETS)
 doc :
 	doxygen
 
-.PHONY: minecraftpp
-minecraftpp:
+.PHONY: $(MCRAFT)
+$(MCRAFT):
 		$(MAKE) -C ../minecraft++
 
 #
@@ -38,9 +40,9 @@ minecraftpp:
 #
 # $$(addprefix build/,$$(subst .cpp,.o,$$(shell find $$(SOURCES_%) -name .svn -prune -o -name '*.cpp' -print) ))
 #
-$(TARGETS) :%: build/src/%.o minecraftpp
+$(TARGETS) :%: build/src/%.o $(MCRAFT)
 	echo "  LD	$@"
-	$(CXX) $(LDFLAGS) -o$@ $<  $(LIBS)
+	$(CXX) $(LDFLAGS) -o$@ $+  $(LIBS)
 
 #
 # Rule to make a .d file from a .cpp file.
