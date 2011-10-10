@@ -8,6 +8,7 @@
 #include <utility>
 #include <vector>
 #include <map>
+#include <memory>
 
 namespace minecraftpp {
 class RegionData;
@@ -16,28 +17,29 @@ typedef std::pair<int32_t,int32_t> Coord;
 typedef std::vector<Coord> CoordVector;
 typedef std::map<Coord,RegionData*> RegionMap;
 
-class World {
+class World : public std::enable_shared_from_this<World> {
 	private:
 		CoordVector coords;
 		Coord topLeft;
 		Coord bottomRight;
 		RegionMap regions;
-		nbtFile* levelFile;
+		std::shared_ptr<nbtFile> levelFile;
 		std::string dirName;
 		std::string constructFilename(int32_t x,int32_t z);
 		void buildCoordList(const Coord&,CoordVector &,const std::string&);
-		nbtFile* readCompressedNBT(const std::string &filename);
+		std::shared_ptr<nbtFile> readCompressedNBT(const std::string &filename);
+		World(const std::string& );
 	public:
 		class iterator {
 			private:
-				World* worldPointer;
+				std::shared_ptr<World> worldPointer;
 				CoordVector::iterator region;
 				uint8_t chunkX;
 				uint8_t chunkZ;
 				void addOne();
 				void subOne();
 			public:
-				iterator(World*);
+				iterator(std::shared_ptr<World>);
 				//set iterator to end
 				iterator& end();
 				//equal
@@ -57,8 +59,7 @@ class World {
 				//get location
 				Coord getCoord();
 		};
-
-		World(const std::string& );
+		static std::shared_ptr<World> getWorld(const std::string &worldfolder);
 		~World();
 		void printCoords();
 		bool regionInDir(int32_t x,int32_t z);

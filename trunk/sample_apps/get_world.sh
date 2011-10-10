@@ -1,4 +1,4 @@
 #!/bin/sh
-wget http://ritchie.cs.ubc.ca/~mcraft/map.tar.bz2
-tar -xvjf map.tar.bz2
-rm map.tar.bz2
+wget http://peaceful.sinmara.net/map.tbz2
+tar -xvjf map.tbz2
+rm map.tbz2

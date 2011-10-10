@@ -92,9 +92,9 @@ bool tracked[256];
 typedef std::vector<blob> BlobVector;
 
 int main(void) {
-	World B("./world");
-	Coord tR = B.getTopRight();
-	Coord bL = B.getBottomLeft();
+	std::shared_ptr<World> B = World::getWorld("./world");
+	Coord tR = B->getTopRight();
+	Coord bL = B->getBottomLeft();
 	BlobVector blobs; 
 	
 	memset(tracked,0,sizeof(tracked));
@@ -104,8 +104,8 @@ int main(void) {
 
 	for(int32_t regionX=tR.first;regionX<bL.first;regionX++)
 		for(int32_t regionZ=tR.second;regionZ<bL.second;regionZ++) {
-			if(B.regionInDir(regionX,regionZ)) {
-				const Region &A = B.getRegion(regionX,regionZ);
+			if(B->regionInDir(regionX,regionZ)) {
+				const Region &A = B->getRegion(regionX,regionZ);
 				for(uint8_t chunkZ=0;chunkZ<REGIONZ;chunkZ++)
 					for(uint8_t chunkX=0;chunkX<REGIONX;chunkX++) {
 						if(A.chunkInFile(chunkX,chunkZ)) {

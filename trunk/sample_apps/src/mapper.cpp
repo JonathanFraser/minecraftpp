@@ -238,9 +238,9 @@ int main(int argc,char *argv[]) {
 	stream.str(blockid);
 	stream >> dataval;
 	ID = static_cast<BlockType>(dataval);
-	World map(worlddir);
-	Coord tL = map.getTopLeft();
-	Coord bR = map.getBottomRight();
+	std::shared_ptr<World> map = World::getWorld(worlddir);
+	Coord tL = map->getTopLeft();
+	Coord bR = map->getBottomRight();
 	unsigned int width = tL.second - bR.second+1; 
 	unsigned int height = bR.first - tL.first+1;  
 //	std::cout << "Width: " << width << std::endl;
@@ -250,8 +250,8 @@ int main(int argc,char *argv[]) {
 		for(int32_t z = bR.second;z<=tL.second;z++){
 			int32_t xoffset = (x-tL.first)*512;
 			int32_t zoffset = (tL.second - z)*512;
-			if(map.regionInDir(x,z)) {
-				scanRegion(&image,xoffset,zoffset,map.getRegion(x,z));
+			if(map->regionInDir(x,z)) {
+				scanRegion(&image,xoffset,zoffset,map->getRegion(x,z));
 			}
 		}
 	std::stringstream png_name;

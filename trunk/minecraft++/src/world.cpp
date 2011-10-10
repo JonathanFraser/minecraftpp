@@ -15,6 +15,10 @@ const char SEPARATOR[] = ".";
 		
 using namespace minecraftpp;
 
+std::shared_ptr<World> World::getWorld(const std::string &worldfolder) {
+	return std::shared_ptr<World>(new World(worldfolder));
+}
+
 World::World(const std::string &worldfolder): topLeft(Coord(0,0)),bottomRight(Coord(0,0)),dirName(worldfolder) {
 	CoordVector temp;
 	if(dirName[dirName.size()] != '/') {
@@ -25,7 +29,6 @@ World::World(const std::string &worldfolder): topLeft(Coord(0,0)),bottomRight(Co
 }
 
 World::~World() {
-	delete levelFile;
 	for(RegionMap::iterator i=regions.begin();i!=regions.end();i++) {
 		delete i->second;
 	}
@@ -72,7 +75,7 @@ void World::buildCoordList(const Coord &test,CoordVector &tested,const std::stri
 	return;
 }
 
-nbtFile* World::readCompressedNBT(const std::string &filename) {
+std::shared_ptr<nbtFile> World::readCompressedNBT(const std::string &filename) {
 	gzFile gzfile = gzopen(filename.c_str(),"rb");
 	assert(gzfile);
 	unsigned int datalength = MEGABYTE;
@@ -80,7 +83,7 @@ nbtFile* World::readCompressedNBT(const std::string &filename) {
 	uint8_t *holder = data;
 	size_t readval = gzread(gzfile,holder,datalength);
 	assert(readval != 0);
-	nbtFile* temp = new nbtFile(data);
+	std::shared_ptr<nbtFile> temp = std::shared_ptr<nbtFile>(new nbtFile(data));
 	delete[] data;
 	gzclose(gzfile);
 	return temp;
@@ -139,14 +142,14 @@ void World::printCoords() {
 }
 
 World::iterator World::begin() {
-	return iterator(this);
+	return iterator(shared_from_this());
 }
 
 World::iterator World::end() {
-	return iterator(this).end();
+	return iterator(shared_from_this()).end();
 }
 
-World::iterator::iterator(World* pointer) : worldPointer(pointer),region(pointer->coords.begin()),chunkX(0),chunkZ(0) {
+World::iterator::iterator(std::shared_ptr<World> pointer) : worldPointer(pointer),region(pointer->coords.begin()),chunkX(0),chunkZ(0) {
 }
 
 World::iterator& World::iterator::end() {
